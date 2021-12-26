@@ -8,7 +8,6 @@ from matplotlib import pyplot as plt
 from matplotlib.animation import FuncAnimation
 import argparse
 import numpy as np
-import random
 
 class Animation:
     def __init__(self, coords_path:str, animation_path:str, interval=33, verbose=True):
