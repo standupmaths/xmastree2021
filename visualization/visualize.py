@@ -11,7 +11,7 @@ import numpy as np
 import random
 
 class Animation:
-    def __init__(self, coords_path:str, animation_path:str, interval=10, verbose=True):
+    def __init__(self, coords_path:str, animation_path:str, interval=33, verbose=True):
         """Animation class that can show an animation csv on GIFT coordinates
 
         Args:
@@ -59,7 +59,7 @@ class Animation:
             list: The updated data uses by the matplotlib animation
         """
         # Print frame info if verbose
-        if verbose:
+        if self.verbose:
             print(f"Frame {frame_idx:03} / {self.n_frames:03}", end="\r")
 
         # Get frame data
@@ -126,13 +126,15 @@ def main():
     """Pareses arguments and runs animation
     """
     parser = argparse.ArgumentParser()
-    parser.add_argument("coords")
-    parser.add_argument("animation")
+    parser.add_argument("coords", help="The path to the coordinates csv")
+    parser.add_argument("animation", help="The path to the animation csv")
+    parser.add_argument("-i", '--interval', default=33, type=int, help="The animation interval in ms")
     args = parser.parse_args()
 
     animation = Animation(
         args.coords,
-        args.animation
+        args.animation,
+        interval=args.interval
     )
 
     animation.run()
