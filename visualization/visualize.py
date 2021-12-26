@@ -117,8 +117,9 @@ class Animation:
         ax.set_zlim(coords_min[2] - margins[2] / 2,
                     coords_max[2] + margins[2] / 2)
 
+        # Cosmetics
         ax.set_axis_off()
-        ax.set_facecolor("black")
+        ax.set_facecolor((0.1, 0.1, 0.1))
 
         return fig, ax
 
