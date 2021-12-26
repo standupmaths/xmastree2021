@@ -3,7 +3,9 @@ Code and coordinates for Matt's 2021 xmas tree
 
 This repository contains the code and coordinates used for Matt's 2021 Christmas tree, as featured in ["My 500-LED xmas tree got into Harvard."](https://youtu.be/WuMRJf6B5Q4).
 
-`coords_2021.csv` are the coordinates of Matt's 2021 tree in GIFT format. The first few entries are identically because they were scanned incorrectly and so were set to the same value as the first 'correct' LED.
+`coords_2021.csv` are the coordinates of Matt's 2021 tree in GIFT format.
+
+⚠️ The first few entries are identical because they were scanned incorrectly and so were set to the same value as the first 'correct' LED.
 
 `light_fixer.py` is the original source code from the video. It corrects coordinates in 'pixel space' but does not convert to GIFT.
 
