@@ -24,7 +24,7 @@ class Animation:
         """
         # Load data from files
         coords = self.load_csv(coords_path)
-        self.frames = self.load_csv(animation_path, header=True)
+        self.frames = self.load_csv(animation_path, header=True) / 255
 
         # Check that sizes match
         n_coords = coords.shape[0]
