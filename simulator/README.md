@@ -18,7 +18,7 @@ The simulation is now available via http://127.0.0.1:8080.
 
 ## Online [![browser](https://img.shields.io/badge/browser-gray?logo=googlechrome&logoColor=white)](#Online) [![status](https://img.shields.io/badge/status-up-brightgreen)](#Online)
 
-An online version of the simulation can also be found [here](https://leukipp.github.io/xmastree2021/).
+An online version of the simulation can also be found [here](https://leukipp.github.io/xmastree2021/simulator).
 
 
 ## License [![license](https://img.shields.io/badge/license-MIT-green)](#License)
