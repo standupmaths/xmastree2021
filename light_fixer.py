@@ -6,6 +6,7 @@ root_folder = "xmaslights_2021/"
 from mpl_toolkits import mplot3d
 from mpl_toolkits.mplot3d.axes3d import Axes3D
 import matplotlib.pyplot as plt
+import matplotlib
 import math as maths
 
 # what percentage of the lights do we think are likely correct?
@@ -118,5 +119,31 @@ while not finished:
         while scan + step != next_good:
             coords[scan+step] = [int(i+j) for i,j in zip(coords[previous_good],[k*step/(next_good-previous_good) for k in differs])]
             step += 1
+
+# Display Points
+matplotlib.use('GTK4Agg')
+
+# plot the points
+fig = plt.figure()
+ax = Axes3D(fig, auto_add_to_figure=False)
+fig.add_axes(ax)
+
+ax.set_title("Christmas Tree")
+ax.set_xlabel('x')
+ax.set_ylabel('y')
+ax.set_ylabel('z')
+x, y, z = zip(*coords)
+
+
+# ax.scatter(xs=x, ys=y, zs=z)
+for a,b in zip(coords[:-1], coords[1:]):
+    ax.plot([a[0], b[0]],
+            [a[1], b[1]],
+            [a[2], b[2]])
+
+plt.show()
+
+
+
 
 # Now need to convert to GIFT
