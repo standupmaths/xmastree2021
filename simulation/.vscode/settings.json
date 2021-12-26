@@ -1,0 +1,9 @@
+{
+    "files.exclude": {
+        "**/node_modules": true
+    },
+    "livePreview.portNumber": 8080,
+    "livePreview.showServerStatusNotifications": true,
+    "livePreview.serverKeepAliveAfterEmbeddedPreviewClose": 0,
+    "livePreview.autoRefreshPreview": "On Changes to Saved Files"
+}

@@ -1,0 +1,84 @@
+body,
+html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-style: normal;
+  font-family: "Open Sans";
+}
+
+#main {
+  width: 100%;
+  height: 100%;
+  background: inherit;
+}
+
+#main #info {
+  top: 0;
+  left: 0;
+  z-index: 10;
+  position: absolute;
+}
+
+#main #info div {
+  padding: 3px;
+  position: absolute;
+}
+
+#main #stage {
+  width: 100%;
+  height: 100%;
+}
+
+#main #controls {
+  top: 0;
+  right: 0;
+  z-index: 10;
+  padding: 3px;
+  position: absolute;
+}
+
+#main #controls select {
+  width: 185px;
+  line-height: 20px;
+  margin: 0px 0px 0px -5px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  color: #44abda;
+  background: #303030;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+#main #controls #inputs {
+  display: none;
+}
+
+#main #source  {
+  bottom: 0;
+  left: 0;
+  margin: 3px;
+  z-index: 10;
+  display: flex;
+  position: absolute;
+  cursor: pointer;
+  background: #0d1333;
+}
+
+#main #source img {
+  width: 12pt;
+  height: 12pt;
+  margin: 5px 0px 5px 5px;
+}
+
+#main #source a {
+  z-index: 10;
+  color: #eeeeee;
+  font-size: 14px;
+  padding: 6px 5px 0px 5px;
+  text-decoration: none;
+}

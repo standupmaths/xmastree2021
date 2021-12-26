@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>GIFT-Simulator</title>
+    <link rel="stylesheet" type="text/css" href="css/styles.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico" />
+    <meta name="description" content="Geographic Information For Trees - Simulator">
+    <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1.0" />
+</head>
+
+<body>
+    <div id="main">
+        <div id="info"></div>
+        <div id="stage"></div>
+        <div id="controls">
+            <div id="inputs">
+                <input id="coords" type="file" accept=".csv" />
+                <input id="frames" type="file" accept=".csv" />
+            </div>
+        </div>
+        <div id="source">
+            <img src="https://github.githubassets.com/favicons/favicon-dark.png" />
+            <a target="_blank" href="https://github.com/leukipp/xmastree2021">GitHub</a>
+        </div>
+    </div>
+    <script src="js/libraries/jszip.min.js"></script>
+    <script src="js/libraries/stats.min.js"></script>
+    <script src="js/libraries/three.min.js"></script>
+    <script src="js/libraries/random.min.js"></script>
+    <script src="js/libraries/dat.gui.min.js"></script>
+    <script src="js/libraries/papaparse.min.js"></script>
+    <script src="js/libraries/filesaver.min.js"></script>
+
+    <script src="js/controls/orbit.js"></script>
+
+    <script src="js/common/helper.js"></script>
+    <script src="js/common/config.js"></script>
+
+    <script src="js/utils/skeleton.js"></script>
+    <script src="js/utils/loader.js"></script>
+    <script src="js/utils/input.js"></script>
+
+    <script src="js/objects/stage.js"></script>
+    <script src="js/objects/room.js"></script>
+    <script src="js/objects/tree.js"></script>
+    <script src="js/objects/light.js"></script>
+    <script src="js/objects/led.js"></script>
+
+    <script src="js/view.js"></script>
+</body>
+
+</html>
