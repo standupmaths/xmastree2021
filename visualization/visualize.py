@@ -7,24 +7,30 @@ import numpy as np
 import random
 
 class Animation:
-    def __init__(self, coords_path, animation_path, interval=50):
+    def __init__(self, coords_path, animation_path, interval=10):
         coords = self.load_csv(coords_path)
-        self.x = coords[:, 0]
-        self.y = coords[:, 1]
-        self.z = coords[:, 2]
+        self.frames = self.load_csv(animation_path, header=True)
 
-        self.animation = self.load_csv(animation_path, header=True)
+        n_coords = coords.shape[0]
+        n_animation_coords = (self.frames.shape[1] - 1) / 3
+        if n_coords != n_animation_coords:
+            raise ValueError(f"Number of LED's on tree ({n_coords}) does not match number of LED's in animation ({n_animation_coords})")
+
+        self.n_frames = len(self.frames)
+
         self.fig, self.ax = self.create_scaled_axis(coords)
-        self.data = self.ax.scatter(self.x, self.y, self.z)
+        self.data = self.ax.scatter(coords[:, 0], coords[:, 1], coords[:, 2])
         self.interval = interval
 
     def run(self):
-        ani = FuncAnimation(self.fig, self.update, frames=range(len(self.animation)), blit=True, interval=self.interval)
+        ani = FuncAnimation(self.fig, self.update, frames=range(len(self.frames)), blit=True, interval=self.interval)
         plt.show()
 
     def update(self, frame_idx):
-        frame = self.animation[frame_idx]
-        self.data.set_color((random.random(), random.random(), random.random()))
+        print(f"Frame {frame_idx:03} / {self.n_frames:03}", end="\r")
+        frame = self.frames[frame_idx][1:]
+        frame = frame.reshape(-1, 3)
+        self.data.set_color(frame)
         return [self.data]
 
     @staticmethod
