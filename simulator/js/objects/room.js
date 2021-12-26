@@ -24,7 +24,7 @@ class Room {
 
         this.loaded = new Promise(async function (resolve) {
             this.twigMaterial = new THREE.MeshStandardMaterial({
-                map: await this.loader.load('texture', 'img/tree/leaf.png'),
+                map: await this.loader.load('texture', 'img/leaf.png'),
                 color: this.config.material.twig,
                 roughness: 1.0,
                 metalness: 0.3,

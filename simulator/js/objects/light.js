@@ -42,10 +42,10 @@ class Light {
     }
 
     async setFrame(colors) {
-        colors.forEach((color, i) => {
+        for (const [i, color] of colors.entries()) {
             const led = this.leds[i];
             led.setColor(intColor(color));
-        });
+        }
     }
 
     async animateFrames(frames) {
