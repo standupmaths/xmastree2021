@@ -21,6 +21,21 @@ The simulation is now available via http://127.0.0.1:8080.
 An online version of the simulation can also be found [here](https://leukipp.github.io/xmastree2021/simulator).
 
 
+## Legal [![download](https://img.shields.io/badge/download-free-lightgrey)](#Legal)
+
+Textures from [texture.ninja](https://texture.ninja):
+
+- [leaf.png](https://texture.ninja/textures/Leaves/4)
+
+Fonts from [fonts.google.com](https://fonts.google.com):
+
+- [opensans.json](https://fonts.google.com/specimen/Open+Sans)
+
+Icons from [icons8.com](https://icons8.com):
+
+- [favicon.png](https://icons8.com/icon/9jXKB0NN0fzm/christmas-tree)
+
+
 ## License [![license](https://img.shields.io/badge/license-MIT-green)](#License)
 
 [MIT](/LICENSE)
