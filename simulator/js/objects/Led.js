@@ -8,21 +8,20 @@ class Led {
         this.position = position;
 
         this.ledScale = 0.6;
-        this.glowScale = 1.6;
+        this.glowScale = 1.0;
+        this.lightDistance = 0.2;
 
-        this.lightDistance = 0.5;
-        this.lightIntensity = 3;
-
-        this.materialLed = new THREE.MeshStandardMaterial({
-            color: 0xc9e8ff,
-            metalness: 0.4
+        this.materialLed = new THREE.MeshPhongMaterial({
+            color: 0x666666,
+            shininess: 0.8
         });
 
-        this.materialGlow = new THREE.MeshStandardMaterial({
-            color: 0xffffff,
+        this.materialGlow = new THREE.MeshPhongMaterial({
+            color: 0x666666,
+            emissive: 0x666666,
             depthWrite: false,
             transparent: true,
-            metalness: 0.8,
+            shininess: 0.8,
             opacity: 0.0
         });
 
@@ -49,33 +48,35 @@ class Led {
         this.group.add(this.glow)
 
         // add led light
-        this.light = new THREE.PointLight(0x000000, 0.0, this.lightDistance);
-        this.light.castShadow = false;
-        // this.group.add(this.light) // TODO
+        this.light = new THREE.PointLight(0, 0.0, this.lightDistance);
+        this.light.visible = false;
+        this.group.add(this.light)
 
         // add to scene
         this.scene.add(this.group);
         setLayer(this.group, this.stage.layer.light);
     }
 
-    async setColor(color) {
-        if (color) {
-            this.turnOn(color);
-        } else {
+    async setColor(color, intensity) {
+        if (!color) {
             this.turnOff();
+            return;
         }
+        this.turnOn(color, intensity);
     }
 
-    async turnOn(color) {
+    async turnOn(color, intensity) {
         // led color
         this.led.material.color.setHex(color);
 
         // glow visibility and color
         this.glow.material.opacity = 0.4;
         this.glow.material.color.setHex(color);
+        this.glow.material.emissive.setHex(color);
 
         // light intensity and color
-        this.light.intensity = this.lightIntensity;
+        this.light.visible = !!intensity;
+        this.light.intensity = intensity;
         this.light.color.setHex(color);
     }
 
@@ -86,8 +87,10 @@ class Led {
         // glow visibility and color
         this.glow.material.opacity = 0.0;
         this.glow.material.color.setHex(this.materialGlow.color.getHex());
+        this.glow.material.emissive.setHex(this.materialGlow.emissive.getHex());
 
         // light intensity and color
+        this.light.visible = false;
         this.light.intensity = 0.0;
         this.light.color.setHex(this.materialGlow.color.getHex());
     }

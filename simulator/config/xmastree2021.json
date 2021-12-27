@@ -1,18 +1,20 @@
 {
     "coordinates": "https://raw.githubusercontent.com/standupmaths/xmastree2021/main/coords_2021.csv",
-    "_coordinates": [
+    "coordinates_": [
         "local",
         "https://raw.githubusercontent.com/standupmaths/xmastree2021/main/coords_2021.csv",
         "https://raw.githubusercontent.com/GSD6338/XmasTree/main/02_sequencing/coords_adjusted_normalized.csv"
     ],
     "animations": "https://raw.githubusercontent.com/GSD6338/XmasTree/main/02_sequencing/flush.csv",
-    "_animations": [
+    "animations_": [
         "local",
         "https://raw.githubusercontent.com/GSD6338/XmasTree/main/02_sequencing/flush.csv",
         "https://raw.githubusercontent.com/GSD6338/XmasTree/main/02_sequencing/pulse-random-color.csv",
         "https://raw.githubusercontent.com/GSD6338/XmasTree/main/02_sequencing/random-blinking-color.csv",
         "https://raw.githubusercontent.com/BoostCookie/xmastree2021/main/examples/bouncy-ball.csv"
     ],
+    "fps": 60,
+    "loop": false,
     "tree": {
         "visible": true,
         "scale": 80.0,
@@ -41,8 +43,8 @@
         }
     },
     "light": {
-        "directional": 0.0,
-        "ambient": 1.0,
+        "directional": 0.8,
+        "ambient": 0.9,
         "led": 1.0
     },
     "material": {
@@ -51,5 +53,5 @@
         "ground": "0xffffff",
         "background": "0x1e1820"
     },
-    "rotate": true
+    "rotation": 1.0
 }

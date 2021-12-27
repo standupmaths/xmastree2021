@@ -45,7 +45,8 @@ class Stage {
 
             // controls
             this.controls = new THREE.MapControls(this.camera, this.renderer.domElement);
-            this.controls.autoRotateSpeed = 0.8;
+            this.controls.autoRotateSpeed = this.config.rotation;
+            this.controls.autoRotate = !!this.config.rotation;
             this.controls.minDistance = 0.1;
             this.controls.maxDistance = 500;
             this.controls.enablePan = true;
@@ -94,10 +95,12 @@ class Stage {
 
     async update() {
         this.renderer.setSize(this.root.clientWidth, this.root.clientHeight);
-        this.controls.autoRotate = this.config.rotate;
 
         this.directionalLight.intensity = this.config.light.directional;
         this.ambientLight.intensity = this.config.light.ambient;
+
+        this.controls.autoRotateSpeed = this.config.rotation;
+        this.controls.autoRotate = !!this.config.rotation;
 
         this.camera.aspect = this.root.clientWidth / this.root.clientHeight;
         this.camera.updateProjectionMatrix();

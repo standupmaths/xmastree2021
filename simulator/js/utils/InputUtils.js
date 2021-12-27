@@ -1,4 +1,4 @@
-class Input {
+class InputUtils {
     constructor(root) {
         this.root = root;
 

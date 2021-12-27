@@ -1,4 +1,4 @@
-class Loader {
+class LoaderUtils {
     constructor() {
         this.cache = {};
         this.loader = {

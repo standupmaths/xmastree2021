@@ -3,7 +3,7 @@ class View {
         this.root = root;
         this.config = config;
         this.presets = presets;
-        this.loader = new Loader();
+        this.loader = new LoaderUtils();
 
         // init stage
         this.stage = new Stage(this.root, this.config, this.loader);
@@ -31,12 +31,12 @@ class View {
         root.append(this.gui.domElement);
 
         // config folder
-        const configFolder = this.gui.addFolder('Config');
+        const configFolder = this.gui.addFolder('Config').open();
         configFolder.add(this.config, 'preset', this.presets).onChange((preset) => {
             this.gui.load.preset = preset;
             window.location.reload();
         });
-        configFolder.add(this.config, 'coordinates', this.config._coordinates).onChange(async (v) => {
+        configFolder.add(this.config, 'coordinates', this.config.coordinates_).onChange(async (v) => {
             if (!v) {
                 return;
             }
@@ -56,7 +56,7 @@ class View {
                 });
             });
         }).listen();
-        configFolder.add(this.config, 'animations', this.config._animations).onChange(async (v) => {
+        configFolder.add(this.config, 'animations', this.config.animations_).onChange(async (v) => {
             if (!v) {
                 return;
             }
@@ -74,6 +74,8 @@ class View {
                 light.animateFrames(frames);
             });
         }).listen();
+        configFolder.add(this.config, 'fps', 1, 120, 1);
+        configFolder.add(this.config, 'loop');
 
         // tree folder
         const treeFolder = this.gui.addFolder('Tree').close();
@@ -124,13 +126,13 @@ class View {
 
         // light folder
         const lightFolder = this.gui.addFolder('Light').close();
-        lightFolder.add(this.config.light, 'directional', 0.0, 5.0, 0.05).onChange((v) => {
+        lightFolder.add(this.config.light, 'directional', 0.0, 3.0, 0.05).onChange((v) => {
             this.stage.update();
         });
-        lightFolder.add(this.config.light, 'ambient', 0.0, 5.0, 0.05).onChange((v) => {
+        lightFolder.add(this.config.light, 'ambient', 0.0, 3.0, 0.05).onChange((v) => {
             this.stage.update();
         });
-        lightFolder.add(this.config.light, 'led', 0.0, 5.0, 0.05).onChange((v) => {
+        lightFolder.add(this.config.light, 'led', 0.0, 3.0, 0.05).onChange((v) => {
             this.stage.update();
         });
 
@@ -151,7 +153,7 @@ class View {
         });
 
         // stage actions
-        this.gui.add(this.config, 'rotate').onChange((v) => {
+        this.gui.add(this.config, 'rotation', 0.0, 10.0, 0.05).onChange((v) => {
             this.stage.update();
         });
         this.gui.add(this, 'export');

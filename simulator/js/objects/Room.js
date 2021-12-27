@@ -31,7 +31,7 @@ class Room {
                 alphaTest: 0.1
             });
 
-            this.input = new Input(this.root);
+            this.input = new InputUtils(this.root);
 
             this.input.coords.addEventListener('input', async () => {
                 const positions = await this.input.loadCoords();
