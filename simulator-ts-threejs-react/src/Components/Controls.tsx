@@ -220,6 +220,8 @@ const PlayControls: React.FC = () => {
     const { frames } = animation;
     const [playing, setPlaying] = React.useState<boolean>(false);
     const now = React.useRef<number>(new Date().valueOf());
+    const requestRef = React.useRef<number>(null);
+    const refPlaying = React.useRef<boolean>(false);
     const onChangeFrame = React.useCallback(
         (e: React.ChangeEvent<HTMLInputElement>) => {
             const value = e.target.valueAsNumber;
@@ -230,10 +232,10 @@ const PlayControls: React.FC = () => {
         [setCurrentFrame, currentFrameRef]
     );
     React.useEffect(() => {
-        if (!playing) {
+        if (!playing || !refPlaying.current) {
+            cancelAnimationFrame(requestRef.current);
             return;
         }
-        let animationFrame = 0;
         const animate = () => {
             const frameTime = new Date().valueOf();
             if (frameTime - now.current > 1000 / 60) {
@@ -245,16 +247,24 @@ const PlayControls: React.FC = () => {
                 currentFrameRef.current = nextFrame;
                 setCurrentFrame(nextFrame);
             }
-            animationFrame = requestAnimationFrame(animate);
+            if (refPlaying.current) {
+                requestRef.current = requestAnimationFrame(animate);
+            }
         };
-        animationFrame = requestAnimationFrame(animate);
-        return () => cancelAnimationFrame(animationFrame);
+        requestRef.current = requestAnimationFrame(animate);
+        return () => cancelAnimationFrame(requestRef.current);
     }, [frames, setCurrentFrame, currentFrameRef, playing]);
     const togglePlaying = React.useCallback(() => {
-        setPlaying((playing) => !playing);
+        setPlaying((playing) => {
+            refPlaying.current = !playing;
+            return !playing;
+        });
     }, []);
     const stopPlaying = React.useCallback(() => {
-        setPlaying(false);
+        setPlaying(() => {
+            refPlaying.current = false;
+            return false;
+        });
         currentFrameRef.current = 0;
         setCurrentFrame(0);
     }, [setCurrentFrame, currentFrameRef]);
@@ -264,17 +274,27 @@ const PlayControls: React.FC = () => {
         currentFrameRef.current = 0;
     }, [setAnimation, setCurrentFrame, currentFrameRef]);
     React.useEffect(() => {
-        setPlaying(true);
+        setPlaying(() => {
+            refPlaying.current = true;
+            return true;
+        });
+        return () => {
+            refPlaying.current = false;
+        };
     }, []);
 
     return (
         <div>
             <h4 className="subtitle">{animation.name}</h4>
             <div>
-                <div>
+                <div className="field">
+                    <label htmlFor="frame" className="label">
+                        {currentFrame}/{animation.frames.length - 1}
+                    </label>
                     <input
                         className="slider is-fullwidth"
                         type="range"
+                        name="frame"
                         min={0}
                         max={animation.frames.length - 1}
                         step={1}
@@ -282,7 +302,7 @@ const PlayControls: React.FC = () => {
                         onChange={onChangeFrame}
                     />
                 </div>
-                <div>
+                <div className="buttons">
                     <button className="button" onClick={togglePlaying}>
                         {playing ? "\u23f8" : "\u23f5"}
                     </button>
@@ -291,8 +311,6 @@ const PlayControls: React.FC = () => {
                             {"\u23f9"}
                         </button>
                     )}
-                </div>
-                <div>
                     <button className="button is-danger" onClick={onCloseClick}>
                         Close
                     </button>
