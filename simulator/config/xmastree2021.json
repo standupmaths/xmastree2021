@@ -8,8 +8,10 @@
     "animations": "https://raw.githubusercontent.com/GSD6338/XmasTree/main/02_sequencing/flush.csv",
     "_animations": [
         "local",
+        "https://raw.githubusercontent.com/GSD6338/XmasTree/main/02_sequencing/flush.csv",
         "https://raw.githubusercontent.com/GSD6338/XmasTree/main/02_sequencing/pulse-random-color.csv",
-        "https://raw.githubusercontent.com/GSD6338/XmasTree/main/02_sequencing/random-blinking-color.csv"
+        "https://raw.githubusercontent.com/GSD6338/XmasTree/main/02_sequencing/random-blinking-color.csv",
+        "https://raw.githubusercontent.com/BoostCookie/xmastree2021/main/examples/bouncy-ball.csv"
     ],
     "tree": {
         "visible": true,
@@ -38,11 +40,16 @@
             "trunkLength": 0.30
         }
     },
+    "light": {
+        "directional": 0.0,
+        "ambient": 1.0,
+        "led": 1.0
+    },
     "material": {
         "tree": "0x613615",
-        "twig": "0x557755",
-        "ground": "0x010101",
-        "background": "0x87ceeb"
+        "leaf": "0x557755",
+        "ground": "0xffffff",
+        "background": "0x1e1820"
     },
     "rotate": true
 }

@@ -1,65 +1,6 @@
-const configs = [
+const presets = [
     'xmastree2021'
 ];
-
-const loadPreset = async (configs) => {
-    // load preset from json
-    const presets = (configRoot, config, guiRoot, gui) => {
-        for (let key in config) {
-            if (!Object.prototype.hasOwnProperty.call(config, key)) {
-                continue;
-            }
-
-            if (typeof config[key] == 'object') {
-                // get config subfolder
-                presets(configRoot, config[key], guiRoot, gui.addFolder(key));
-            }
-            else {
-                // get config parent keys
-                let guiParent = gui;
-                let configParents = [];
-                while (guiParent.parent) {
-                    configParents.unshift(guiParent.name);
-                    guiParent = guiParent.parent;
-                }
-
-                // set config target
-                let configTarget = configRoot;
-                let configSource = cloneObject(configRoot);
-                configParents.forEach((key) => {
-                    configTarget = configTarget[key];
-                    configSource = configSource[key];
-                });
-
-                // add config properties
-                if (configParents.includes('color')) {
-                    gui.addColor(configTarget, key);
-                }
-                else {
-                    gui.add(configTarget, key);
-                }
-
-                // remember config value
-                Object.assign(configTarget, configSource);
-                guiRoot.remember(configTarget);
-            }
-        }
-    };
-
-    await Promise.all([...configs].reverse().map(getConfig)).then((configsReversed) => {
-        configsReversed.forEach((config) => {
-            const gui = new dat.GUI({ autoPlace: false });
-            gui.useLocalStorage = true;
-
-            // generate and save preset
-            presets(config, config, gui, gui);
-            gui.saveAs(config.preset);
-            gui.destroy();
-        });
-    });
-
-    return getLocalStorage('gui').preset;
-};
 
 const getPreset = async (configs) => {
     // load preset from url
@@ -68,14 +9,8 @@ const getPreset = async (configs) => {
         return hash.preset;
     }
 
-    // load preset from local storage
-    const load = getLocalStorage('gui');
-    if (load.preset) {
-        return load.preset;
-    }
-
-    // load preset from json
-    return loadPreset(configs);
+    // using default preset
+    return configs[0];
 };
 
 const getConfig = async (preset) => {
@@ -93,8 +28,8 @@ const getConfig = async (preset) => {
             // resolve promise
             resolve(config);
         }).catch(async () => {
-            // resolve promise using default config
-            return resolve(await getConfig('xmastree2021'));
+            // resolve promise using default preset
+            return resolve(await getConfig(configs[0]));
         });
     });
 };
@@ -146,14 +81,4 @@ const setHash = (key, value) => {
     const hash = getHash();
     hash[key] = value;
     window.location.hash = Object.keys(hash).map((key) => `${key}=${hash[key]}`).join('&');
-};
-
-const getLocalStorage = (key) => {
-    try {
-        const item = `${document.location.href}.${key}`;
-        return jsonParse(localStorage.getItem(item) || '{}');
-    }
-    catch {
-        return {};
-    }
 };

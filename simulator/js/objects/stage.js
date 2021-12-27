@@ -8,8 +8,7 @@ class Stage {
         this.layer = {
             ground: 1,
             light: 2,
-            tree: 3,
-            camera: 4
+            tree: 3
         };
 
         this.loaded = new Promise(async function (resolve) {
@@ -21,11 +20,11 @@ class Stage {
             this.scene = new THREE.Scene();
 
             // stage directional light
-            this.directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+            this.directionalLight = new THREE.DirectionalLight(0xffffff, this.config.light.directional);
             this.directionalLight.position.set(100, 100, 100);
 
             // stage ambient light
-            this.ambientLight = new THREE.AmbientLight(0xffffff, 1);
+            this.ambientLight = new THREE.AmbientLight(0xffffff, this.config.light.ambient);
 
             // stage camera
             this.camera = new THREE.PerspectiveCamera(this.fov, this.root.clientWidth / this.root.clientHeight, 0.1, 1000);
@@ -41,6 +40,8 @@ class Stage {
             // renderer
             this.renderer = new THREE.WebGLRenderer({ logarithmicDepthBuffer: true, preserveDrawingBuffer: true, antialias: true });
             this.renderer.setPixelRatio(window.devicePixelRatio);
+            this.renderer.physicallyCorrectLights = false;
+            this.renderer.shadowMap.enabled = false;
 
             // controls
             this.controls = new THREE.MapControls(this.camera, this.renderer.domElement);
@@ -94,6 +95,9 @@ class Stage {
     async update() {
         this.renderer.setSize(this.root.clientWidth, this.root.clientHeight);
         this.controls.autoRotate = this.config.rotate;
+
+        this.directionalLight.intensity = this.config.light.directional;
+        this.ambientLight.intensity = this.config.light.ambient;
 
         this.camera.aspect = this.root.clientWidth / this.root.clientHeight;
         this.camera.updateProjectionMatrix();

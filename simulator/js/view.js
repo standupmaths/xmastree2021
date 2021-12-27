@@ -27,18 +27,15 @@ class View {
     async controls(root) {
 
         // gui root
-        this.gui = new dat.GUI({ autoPlace: false, width: 320 });
-        this.gui.closed = !!getLocalStorage('gui').closed;
-        this.gui.useLocalStorage = true;
+        this.gui = new lil.GUI({ autoPlace: false, width: 320 });
         root.append(this.gui.domElement);
 
         // config folder
-        const configFolder = this.gui.addFolder('config');
+        const configFolder = this.gui.addFolder('Config');
         configFolder.add(this.config, 'preset', this.presets).onChange((preset) => {
             this.gui.load.preset = preset;
             window.location.reload();
         });
-
         configFolder.add(this.config, 'coordinates', this.config._coordinates).onChange(async (v) => {
             if (!v) {
                 return;
@@ -59,7 +56,6 @@ class View {
                 });
             });
         }).listen();
-
         configFolder.add(this.config, 'animations', this.config._animations).onChange(async (v) => {
             if (!v) {
                 return;
@@ -80,7 +76,7 @@ class View {
         }).listen();
 
         // tree folder
-        const treeFolder = this.gui.addFolder('tree');
+        const treeFolder = this.gui.addFolder('Tree').close();
         const treesFolders = [
             treeFolder.add(this.config.tree, 'visible'),
             treeFolder.add(this.config.tree, 'scale', 10, 100, 1),
@@ -89,7 +85,7 @@ class View {
         ];
 
         // tree branching folder
-        const branchingFolder = treeFolder.addFolder('branching');
+        const branchingFolder = treeFolder.addFolder('Branching').close();
         const branchingFolders = [
             branchingFolder.add(this.config.tree.branching, 'initialBranchLength', 0.1, 1.0, 0.05),
             branchingFolder.add(this.config.tree.branching, 'lengthFalloffFactor', 0.1, 1.0, 0.05),
@@ -103,7 +99,7 @@ class View {
         ];
 
         // tree trunk folder
-        const trunkFolder = treeFolder.addFolder('trunk');
+        const trunkFolder = treeFolder.addFolder('Trunk').close();
         const trunkFolders = [
             trunkFolder.add(this.config.tree.trunk, 'maxRadius', 0.05, 0.2, 0.05),
             trunkFolder.add(this.config.tree.trunk, 'climbRate', 0.05, 2.0, 0.05),
@@ -126,13 +122,25 @@ class View {
             });
         });
 
+        // light folder
+        const lightFolder = this.gui.addFolder('Light').close();
+        lightFolder.add(this.config.light, 'directional', 0.0, 5.0, 0.05).onChange((v) => {
+            this.stage.update();
+        });
+        lightFolder.add(this.config.light, 'ambient', 0.0, 5.0, 0.05).onChange((v) => {
+            this.stage.update();
+        });
+        lightFolder.add(this.config.light, 'led', 0.0, 5.0, 0.05).onChange((v) => {
+            this.stage.update();
+        });
+
         // material folder
-        const materialFolder = this.gui.addFolder('material');
+        const materialFolder = this.gui.addFolder('Material').close();
         materialFolder.addColor(this.config.material, 'tree').onChange((v) => {
             this.room.treeMaterial.color.setHex(v);
         });
-        materialFolder.addColor(this.config.material, 'twig').onChange((v) => {
-            this.room.twigMaterial.color.setHex(v);
+        materialFolder.addColor(this.config.material, 'leaf').onChange((v) => {
+            this.room.leafMaterial.color.setHex(v);
         });
         materialFolder.addColor(this.config.material, 'ground').onChange((v) => {
             this.room.groundMaterial.color.setHex(v);
@@ -219,9 +227,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     Math.seedrandom(document.title);
 
     // load preset and config
-    const preset = await getPreset(configs);
+    const preset = await getPreset(presets);
     const config = await getConfig(preset);
 
     // init view
-    new View(document.querySelector('#main'), config, configs);
+    new View(document.querySelector('#main'), config, presets);
 });

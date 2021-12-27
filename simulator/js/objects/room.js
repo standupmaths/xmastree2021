@@ -23,9 +23,9 @@ class Room {
         });
 
         this.loaded = new Promise(async function (resolve) {
-            this.twigMaterial = new THREE.MeshStandardMaterial({
+            this.leafMaterial = new THREE.MeshStandardMaterial({
                 map: await this.loader.load('texture', 'img/leaf.png'),
-                color: this.config.material.twig,
+                color: this.config.material.leaf,
                 roughness: 1.0,
                 metalness: 0.3,
                 alphaTest: 0.1
@@ -135,17 +135,17 @@ class Room {
         treeGeometry.setAttribute('uv', createFloatAttribute(tree.UV, 2));
         treeGeometry.setIndex(createIntAttribute(tree.faces, 1));
 
-        // tree twigs
-        const twigGeometry = new THREE.BufferGeometry();
-        twigGeometry.setAttribute('position', createFloatAttribute(tree.vertsTwig, 3));
-        twigGeometry.setAttribute('normal', normalizeAttribute(createFloatAttribute(tree.normalsTwig, 3)));
-        twigGeometry.setAttribute('uv', createFloatAttribute(tree.uvsTwig, 2));
-        twigGeometry.setIndex(createIntAttribute(tree.facesTwig, 1));
+        // tree leafs
+        const leafGeometry = new THREE.BufferGeometry();
+        leafGeometry.setAttribute('position', createFloatAttribute(tree.vertsTwig, 3));
+        leafGeometry.setAttribute('normal', normalizeAttribute(createFloatAttribute(tree.normalsTwig, 3)));
+        leafGeometry.setAttribute('uv', createFloatAttribute(tree.uvsTwig, 2));
+        leafGeometry.setIndex(createIntAttribute(tree.facesTwig, 1));
 
-        // tree trunk and twigs
+        // tree trunk and leafs
         const treeGroup = new THREE.Group();
         treeGroup.add(new THREE.Mesh(treeGeometry, this.treeMaterial));
-        treeGroup.add(new THREE.Mesh(twigGeometry, this.twigMaterial));
+        treeGroup.add(new THREE.Mesh(leafGeometry, this.leafMaterial));
 
         // tree size and position
         treeGroup.scale.multiplyScalar(this.config.tree.scale / 100);
@@ -169,6 +169,11 @@ class Room {
         // hide or show trees
         this.trees.forEach((tree) => {
             tree.visible = this.config.tree.visible;
+        });
+
+        // update lights
+        this.lights.forEach((light) => {
+            light.update();
         });
     }
 
