@@ -11,7 +11,6 @@ module.exports = {
     target: "web",
     mode: "development",
     output: {
-        publicPath: "./",
         path: path.join(__dirname, "/dist"),
         filename: "bundle.min.js"
     },
@@ -33,7 +32,6 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin({
             inject: true,
-            baseUrl: "./",
             directory: path.join(__dirname, "public"),
             template: path.resolve(__dirname, "public/index.html")
         })

@@ -10,13 +10,13 @@ export const Controls: React.FC = () => {
 };
 export const UploadControls: React.FC = () => {
     return (
-        <div className="upload-controls">
+        <div>
             <FromUrl />
-            <div>
+            <div className="has-text-centered">
                 <span>or</span>
             </div>
             <FromFile />
-            <div>
+            <div className="has-text-centered">
                 <span>or</span>
             </div>
             <KnownAnimations />
@@ -27,7 +27,7 @@ const FormError: React.FC<{ text: string }> = ({ text }) => {
     if (!text) {
         return null;
     }
-    return <p style={{ color: "red" }}>{text}</p>;
+    return <p className="help is-danger">{text}</p>;
 };
 const FromUrl: React.FC = () => {
     const { setAnimation } = useExamplesContext();
@@ -48,9 +48,15 @@ const FromUrl: React.FC = () => {
     );
     return (
         <form onSubmit={onSubmit}>
+            <div className="field has-addons">
+                <div className="control is-expanded">
+                    <input className="input is-fullwidth" name="url" type="text" placeholder="Enter URL" />
+                </div>
+                <div className="control">
+                    <input type="submit" className="button is-primary" />
+                </div>
+            </div>
             <FormError text={error} />
-            <input name="url" type="text" placeholder="Enter URL" />
-            <input type="submit" />
         </form>
     );
 };
@@ -58,6 +64,7 @@ const FromUrl: React.FC = () => {
 const FromFile: React.FC = () => {
     const { setAnimation } = useExamplesContext();
     const [error, setError] = React.useState<string>();
+    const [fileName, setFileName] = React.useState<string>();
     const onSubmit = React.useCallback(
         (e: React.FormEvent<HTMLFormElement>) => {
             e.preventDefault();
@@ -73,11 +80,35 @@ const FromFile: React.FC = () => {
         [setAnimation]
     );
     return (
-        <form onSubmit={onSubmit}>
-            <FormError text={error} />
-            <input name="file" type="file" placeholder="Upload" accept=".csv" multiple={false} />
-            <input type="submit" />
-        </form>
+        <>
+            <form onSubmit={onSubmit}>
+                <div className="file has-name is-fullwidth field has-addons">
+                    <label className="file-label">
+                        <input
+                            onChange={(e) => setFileName(e.target.files.item(0)?.name)}
+                            className="file-input"
+                            type="file"
+                            name="file"
+                            accept=".csv"
+                            multiple={false}
+                        />
+                        <span className="file-cta">
+                            {/* <span className="file-icon">
+                            <i className="fas fa-upload"></i>
+                        </span> */}
+                            <span className="file-label">Choose a file…</span>
+                        </span>
+                        <span className="file-name" style={{ borderRadius: 0 }}>
+                            {fileName}
+                        </span>
+                    </label>
+                    <div className="control">
+                        <input type="submit" className="button is-primary" />
+                    </div>
+                </div>
+                <FormError text={error} />
+            </form>
+        </>
     );
 };
 const KnownAnimations: React.FC = () => {
@@ -109,16 +140,24 @@ const KnownAnimations: React.FC = () => {
     );
     return (
         <form onSubmit={onSubmit}>
+            <div className="field has-addons">
+                <div className="control is-expanded">
+                    <div className="select is-fullwidth">
+                        <select name="url">
+                            <option />
+                            {options.map((option) => (
+                                <option key={option[1]} value={option[1]}>
+                                    {option[0]}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
+                <div className="control">
+                    <input type="submit" className="button is-primary" />
+                </div>
+            </div>
             <FormError text={error} />
-            <select name="url">
-                <option />
-                {options.map((option) => (
-                    <option key={option[1]} value={option[1]}>
-                        {option[0]}
-                    </option>
-                ))}
-            </select>
-            <input type="submit" />
         </form>
     );
 };
@@ -162,7 +201,13 @@ const parseTextToFrames = (text: string): number[][] => {
     try {
         const [, ...rows] = text.trim().split("\n");
         return rows.map((row) => {
-            const [, ...values] = row.split(",").map(parseFloat);
+            const [, ...values] = row.split(",").map((value) => {
+                const numberValue = parseFloat(value);
+                if (isNaN(numberValue)) {
+                    throw new Error("Value in the animation is not a number!");
+                }
+                return numberValue;
+            });
             return values;
         });
     } catch (e) {
@@ -224,10 +269,11 @@ const PlayControls: React.FC = () => {
 
     return (
         <div>
-            <h4>{animation.name}</h4>
+            <h4 className="subtitle">{animation.name}</h4>
             <div>
                 <div>
                     <input
+                        className="slider is-fullwidth"
                         type="range"
                         min={0}
                         max={animation.frames.length - 1}
@@ -237,11 +283,19 @@ const PlayControls: React.FC = () => {
                     />
                 </div>
                 <div>
-                    <button onClick={togglePlaying}>{playing ? "\u23f8" : "\u23f5"}</button>
-                    {playing && <button onClick={stopPlaying}>{"\u23f9"}</button>}
+                    <button className="button" onClick={togglePlaying}>
+                        {playing ? "\u23f8" : "\u23f5"}
+                    </button>
+                    {playing && (
+                        <button className="button" onClick={stopPlaying}>
+                            {"\u23f9"}
+                        </button>
+                    )}
                 </div>
                 <div>
-                    <button onClick={onCloseClick}>Close</button>
+                    <button className="button is-danger" onClick={onCloseClick}>
+                        Close
+                    </button>
                 </div>
             </div>
         </div>

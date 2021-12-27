@@ -7,14 +7,25 @@ import { Tree } from "../Scene/Tree";
 
 export const App: React.FC = () => {
     return (
-        <div>
+        <>
             <ExamplesContextProvider>
-                <Controls />
-                <Canvas>
-                    <Tree />
-                </Canvas>
+                <div className="section">
+                    <Controls />
+                </div>
+                <div className="section">
+                    <div className="columns">
+                        <div className="column">
+                            <Canvas>
+                                <Tree />
+                            </Canvas>
+                        </div>
+                        <div className="column">
+                            <h1 className="title">TreeSim by LeQwasd</h1>
+                        </div>
+                    </div>
+                </div>
             </ExamplesContextProvider>
-        </div>
+        </>
     );
 };
 export const render = (container: HTMLElement) => {
