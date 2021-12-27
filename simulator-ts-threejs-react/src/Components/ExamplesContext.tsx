@@ -1,4 +1,5 @@
 import * as React from "react";
+import { getFramesFromUrlForm } from "./Controls";
 
 export interface IAnimation {
     name: string;
@@ -17,6 +18,21 @@ export const ExamplesContextProvider: React.FC = ({ children }) => {
     const [currentFrame, setCurrentFrame] = React.useState<number>(0);
     const currentFrameRef = React.useRef<number>(0);
 
+    React.useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const url = urlParams.get("url");
+        if (url) {
+            const params = new FormData();
+            params.set("url", url);
+            getFramesFromUrlForm(params)
+                .then((animation) => {
+                    setAnimation(animation);
+                })
+                .catch((e) => {
+                    alert(e.message);
+                });
+        }
+    }, []);
     return (
         <ExamplesContext.Provider value={{ animation, setAnimation, currentFrame, setCurrentFrame, currentFrameRef }}>
             {children}

@@ -177,7 +177,7 @@ const getFramesFromFileForm = async (formData: FormData): Promise<IAnimation> =>
         name: file.name
     };
 };
-const getFramesFromUrlForm = async (formData: FormData): Promise<IAnimation> => {
+export const getFramesFromUrlForm = async (formData: FormData): Promise<IAnimation> => {
     const url = formData.get("url") as string;
     const animation = await fetchFromUrl(url);
     return animation;
