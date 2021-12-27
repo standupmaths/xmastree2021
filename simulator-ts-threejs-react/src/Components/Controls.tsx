@@ -30,7 +30,7 @@ const FormError: React.FC<{ text: string }> = ({ text }) => {
     return <p className="help is-danger">{text}</p>;
 };
 const FromUrl: React.FC = () => {
-    const { setAnimation } = useExamplesContext();
+    const { setAnimation, setLoadedUrl } = useExamplesContext();
     const [error, setError] = React.useState<string>();
     const onSubmit = React.useCallback(
         (e: React.FormEvent<HTMLFormElement>) => {
@@ -39,12 +39,13 @@ const FromUrl: React.FC = () => {
             getFramesFromUrlForm(data)
                 .then((frames) => {
                     setAnimation(frames);
+                    setLoadedUrl(data.get("url") as string);
                 })
                 .catch((e) => {
                     setError(e.message);
                 });
         },
-        [setAnimation]
+        [setAnimation, setLoadedUrl]
     );
     return (
         <form onSubmit={onSubmit}>
@@ -62,7 +63,7 @@ const FromUrl: React.FC = () => {
 };
 
 const FromFile: React.FC = () => {
-    const { setAnimation } = useExamplesContext();
+    const { setAnimation, setLoadedUrl } = useExamplesContext();
     const [error, setError] = React.useState<string>();
     const [fileName, setFileName] = React.useState<string>();
     const onSubmit = React.useCallback(
@@ -72,12 +73,13 @@ const FromFile: React.FC = () => {
             getFramesFromFileForm(data)
                 .then((frames) => {
                     setAnimation(frames);
+                    setLoadedUrl(null);
                 })
                 .catch((e) => {
                     setError(e.message);
                 });
         },
-        [setAnimation]
+        [setAnimation, setLoadedUrl]
     );
     return (
         <>
@@ -112,7 +114,7 @@ const FromFile: React.FC = () => {
     );
 };
 const KnownAnimations: React.FC = () => {
-    const { setAnimation } = useExamplesContext();
+    const { setAnimation, setLoadedUrl } = useExamplesContext();
     const [options, setOptions] = React.useState<[string, string][]>([]);
     const [error, setError] = React.useState<string>();
     React.useEffect(() => {
@@ -131,12 +133,13 @@ const KnownAnimations: React.FC = () => {
             getFramesFromUrlForm(data)
                 .then((frames) => {
                     setAnimation(frames);
+                    setLoadedUrl(data.get("url") as string);
                 })
                 .catch((e) => {
                     setError(e.message);
                 });
         },
-        [setAnimation]
+        [setAnimation, setLoadedUrl]
     );
     return (
         <form onSubmit={onSubmit}>
@@ -163,12 +166,9 @@ const KnownAnimations: React.FC = () => {
 };
 
 const getFramesFromFileForm = async (formData: FormData): Promise<IAnimation> => {
-    const file = formData.get("file");
-    if (!file) {
+    const file = formData.get("file") as File;
+    if (!file || !file.name || !file.size) {
         throw new Error("No file selected");
-    }
-    if (!(file instanceof File)) {
-        throw new Error("Not a file...");
     }
     const text = await file.text();
     const frames = parseTextToFrames(text);
@@ -199,7 +199,13 @@ const fetchFromUrl = async (url: string): Promise<IAnimation> => {
 
 const parseTextToFrames = (text: string): number[][] => {
     try {
+        if (!text.length) {
+            throw new Error("Empty csv!");
+        }
         const [, ...rows] = text.trim().split("\n");
+        if (!rows.length) {
+            throw new Error("No useful lines in the csv!");
+        }
         return rows.map((row) => {
             const [, ...values] = row.split(",").map((value) => {
                 const numberValue = parseFloat(value);
@@ -216,12 +222,13 @@ const parseTextToFrames = (text: string): number[][] => {
 };
 
 const PlayControls: React.FC = () => {
-    const { animation, setAnimation, currentFrame, currentFrameRef, setCurrentFrame } = useExamplesContext();
+    const { animation, setAnimation, currentFrame, currentFrameRef, setCurrentFrame, loadedUrl } = useExamplesContext();
     const { frames } = animation;
     const [playing, setPlaying] = React.useState<boolean>(false);
     const now = React.useRef<number>(new Date().valueOf());
     const requestRef = React.useRef<number>(null);
     const refPlaying = React.useRef<boolean>(false);
+    const refCopyInput = React.useRef<HTMLInputElement>();
     const onChangeFrame = React.useCallback(
         (e: React.ChangeEvent<HTMLInputElement>) => {
             const value = e.target.valueAsNumber;
@@ -282,10 +289,42 @@ const PlayControls: React.FC = () => {
             refPlaying.current = false;
         };
     }, []);
+    const copyValue = React.useMemo(() => {
+        if (!loadedUrl) {
+            return "";
+        }
+        return `https://leqwasd.github.io/treesim/?url=${loadedUrl}`;
+    }, [loadedUrl]);
+    const onClickShare = React.useCallback(() => {
+        const input = document.createElement("input");
+        input.select();
+        input.setSelectionRange(0, 99999); /* For mobile devices */
+
+        /* Copy the text inside the text field */
+        navigator.clipboard.writeText(copyValue);
+        alert("Link is in the clipboard!");
+    }, [copyValue]);
 
     return (
         <div>
-            <h4 className="subtitle">{animation.name}</h4>
+            <h4 className="is-flex" style={{ alignItems: "baseline", gap: "20px" }}>
+                <span className="subtitle">{animation.name}</span>
+                <button className="button is-info" onClick={onClickShare}>
+                    <i className="far fa-copy" />
+                </button>
+                {/* {loadedUrl && (
+                    <div className="field has-addons" style={{ display: "inline-block" }}>
+                        <div className="control">
+                            <input className="input" type="text" value={copyValue} readOnly ref={refCopyInput} />
+                        </div>
+                        <div className="control">
+                            <button className="button is-info" onClick={onClickShare}>
+                                <i className="far fa-copy" />
+                            </button>
+                        </div>
+                    </div>
+                )} */}
+            </h4>
             <div>
                 <div className="field">
                     <label htmlFor="frame" className="label">
