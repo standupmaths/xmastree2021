@@ -5,7 +5,7 @@ import { useSceneContext } from "./Canvas";
 
 export const Tree: React.FC = () => {
     const { scene, camera, controls } = useSceneContext();
-    const { frames } = useExamplesContext();
+    const { animation, currentFrame } = useExamplesContext();
     const [points, setPoints] = React.useState<Points>();
     React.useEffect(() => {
         getTreeMesh().then((tree) => {
@@ -19,35 +19,22 @@ export const Tree: React.FC = () => {
             setPoints(tree);
         });
     }, [scene, camera, controls]);
-
+    const colorAttributes = React.useMemo(() => {
+        if (!animation) {
+            return null;
+        }
+        return animation.frames.map((frame) => new BufferAttribute(new Float32Array(frame.map((c) => c / 255)), 3));
+    }, [animation]);
     React.useEffect(() => {
-        if (!frames || !points) {
+        if (!points) {
             return;
         }
-        console.log("Begun animation");
-        const colorAttributes = frames.map(
-            (frame) => new BufferAttribute(new Float32Array(frame.map((c) => c / 255)), 3)
-        );
-        let now = new Date().valueOf();
-        let i = 0;
-        let animationFrame = 0;
-        const animate = () => {
-            const frameTime = new Date().valueOf();
-            if (frameTime - now > 1000 / 60) {
-                now = frameTime;
-                points.geometry.setAttribute("color", colorAttributes[i]);
-                i++;
-                if (i === frames.length) {
-                    i = 0;
-                }
-            }
-            animationFrame = requestAnimationFrame(animate);
-        };
-        animate();
-        // @ts-ignore
-        window.nextFrame = animate;
-        return () => cancelAnimationFrame(animationFrame);
-    }, [frames, points]);
+        if (!colorAttributes) {
+            points.geometry.setAttribute("color", getWhiteColors(points.geometry.getAttribute("position").count));
+            return;
+        }
+        points.geometry.setAttribute("color", colorAttributes[currentFrame]);
+    }, [colorAttributes, points, currentFrame]);
 
     return null;
 };
@@ -67,19 +54,7 @@ const getCoordinates = async (): Promise<BufferAttribute> => {
 export const getTreeMesh = async (): Promise<Points> => {
     const coordinates = await getCoordinates();
     const geometry = new BufferGeometry();
-    // const sprite = new TextureLoader().load("disc.png");
-
-    const c = document.createElement("canvas");
-    c.width = 128;
-    c.height = 128;
-    const ctx = c.getContext("2d");
-    ctx.clearRect(0, 0, 128, 128);
-    ctx.fillStyle = "white";
-    ctx.beginPath();
-    ctx.arc(64, 64, 64, 0, 2 * Math.PI);
-    ctx.fill();
-
-    const sprite = new CanvasTexture(c);
+    const sprite = getCanvasTexture();
 
     geometry.setAttribute("position", coordinates);
     geometry.setDrawRange(0, 1000);
@@ -94,4 +69,26 @@ export const getTreeMesh = async (): Promise<Points> => {
     });
     const pointCloud = new Points(geometry, material);
     return pointCloud;
+};
+
+const getCanvasTexture = (): CanvasTexture => {
+    const c = document.createElement("canvas");
+    c.width = 128;
+    c.height = 128;
+    const ctx = c.getContext("2d");
+    ctx.clearRect(0, 0, 128, 128);
+    ctx.fillStyle = "white";
+    ctx.beginPath();
+    ctx.arc(64, 64, 64, 0, 2 * Math.PI);
+    ctx.fill();
+
+    return new CanvasTexture(c);
+};
+
+const getWhiteColors = (count: number) => {
+    const components: number[] = [];
+    for (let i = 0; i < count; i++) {
+        components.push(1, 1, 1);
+    }
+    return new BufferAttribute(new Float32Array(components), 3);
 };
