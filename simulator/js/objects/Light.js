@@ -75,17 +75,20 @@ class Light {
     async animateFrames(frames) {
         log('debug', `animate ${frames.length} frames (${this.config.fps} FPS)`);
 
-        for (const frame of frames) {
-            const colors = frame.chunk(3);
-            if (colors.length != this.leds.length) {
-                log('warn', `colors length ${colors.length} != leds length ${this.leds.length}`)
-                break;
+        do {
+            for (const frame of frames) {
+                const colors = frame.slice().chunk(3);
+                if (colors.length != this.leds.length) {
+                    log('warn', `colors length ${colors.length} != leds length ${this.leds.length}`)
+                    return;
+                }
+
+                await this.setFrame(colors);
+                await sleep(1000 / this.config.fps);
             }
+        } while (this.config.loop);
 
-            await this.setFrame(colors);
-            await sleep(1000 / this.config.fps);
-        }
-
+        // reset leds
         this.leds.forEach((led) => {
             led.reset();
         });
