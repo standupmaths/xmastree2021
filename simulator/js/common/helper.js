@@ -222,9 +222,10 @@ const transparentCanvas = (canvas, color) => {
 };
 
 const truncatedMean = (values, percent) => {
-    const outliers = parseInt(values.length * percent);
-    const sorted = values.sort((a, b) => a - b).slice(outliers, -outliers);
-    return sorted.reduce((a, b) => a + b) / sorted.length;
+    const outliers = Math.ceil(values.length * percent);
+    const sorted = values.slice().sort((a, b) => a - b).slice(outliers, -outliers);
+    const results = sorted.length ? sorted : values.slice();
+    return results.reduce((a, b) => a + b) / results.length;
 }
 
 const randomGenerator = (seed) => {

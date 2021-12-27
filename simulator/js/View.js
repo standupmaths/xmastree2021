@@ -74,7 +74,9 @@ class View {
                 light.animateFrames(frames);
             });
         }).listen();
-        configFolder.add(this.config, 'fps', 1, 120, 1);
+        configFolder.add(this.config, 'fps', 1, 120, 1).onChange((v) => {
+            this.stage.update();
+        });
         configFolder.add(this.config, 'loop');
 
         // tree folder
@@ -153,7 +155,7 @@ class View {
         });
 
         // stage actions
-        this.gui.add(this.config, 'rotation', 0.0, 10.0, 0.05).onChange((v) => {
+        this.gui.add(this.config, 'rotation', 0.0, 20.0, 0.05).onChange((v) => {
             this.stage.update();
         });
         this.gui.add(this, 'export');

@@ -11,6 +11,10 @@ class Stage {
             tree: 3
         };
 
+        this.fps = [Math.max(30, this.config.fps)];
+        this.clock = new THREE.Clock();
+        this.delta = 0;
+
         this.loaded = new Promise(async function (resolve) {
             const path = 'font/opensans.json';
             const font = await this.loader.load('font', path);
@@ -82,8 +86,31 @@ class Stage {
     }
 
     async animate() {
-        await this.render();
         requestAnimationFrame(this.animate);
+
+        // update clock delta
+        this.delta += this.clock.getDelta();
+
+        // desired fps and delta
+        const fps = Math.max(30, this.config.fps);
+        const delta = 1 / fps;
+
+        // check clock delta
+        if (this.delta >= delta) {
+            await this.render();
+
+            // append current fps
+            this.fps.push(1 / this.delta);
+            this.fps = this.fps.slice(-30);
+
+            // update clock delta
+            this.delta = this.delta % delta;
+
+            // adjust rotation speed
+            const rotation = this.config.rotation * (30 / truncatedMean(this.fps, 0.0))
+            this.controls.autoRotate = !!this.config.rotation;
+            this.controls.autoRotateSpeed = rotation;
+        }
     }
 
     async render() {
@@ -98,9 +125,6 @@ class Stage {
 
         this.directionalLight.intensity = this.config.light.directional;
         this.ambientLight.intensity = this.config.light.ambient;
-
-        this.controls.autoRotateSpeed = this.config.rotation;
-        this.controls.autoRotate = !!this.config.rotation;
 
         this.camera.aspect = this.root.clientWidth / this.root.clientHeight;
         this.camera.updateProjectionMatrix();
