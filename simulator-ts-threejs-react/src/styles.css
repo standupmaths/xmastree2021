@@ -1,1 +1,6 @@
 html, body { margin: 0; }
+.upload-controls {
+}
+.upload-controls form {
+    padding: 10px;
+}

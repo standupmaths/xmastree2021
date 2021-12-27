@@ -10,10 +10,16 @@ export const Controls: React.FC = () => {
 };
 export const UploadControls: React.FC = () => {
     return (
-        <div>
+        <div className="upload-controls">
             <FromUrl />
-            <span>or</span>
+            <div>
+                <span>or</span>
+            </div>
             <FromFile />
+            <div>
+                <span>or</span>
+            </div>
+            <KnownAnimations />
         </div>
     );
 };
@@ -74,6 +80,48 @@ const FromFile: React.FC = () => {
         </form>
     );
 };
+const KnownAnimations: React.FC = () => {
+    const { setAnimation } = useExamplesContext();
+    const [options, setOptions] = React.useState<[string, string][]>([]);
+    const [error, setError] = React.useState<string>();
+    React.useEffect(() => {
+        getKnownAnimations()
+            .then((options) => {
+                setOptions(options);
+            })
+            .catch((e) => {
+                setError(e.message);
+            });
+    }, []);
+    const onSubmit = React.useCallback(
+        (e: React.FormEvent<HTMLFormElement>) => {
+            e.preventDefault();
+            const data = new FormData(e.target as HTMLFormElement);
+            getFramesFromUrlForm(data)
+                .then((frames) => {
+                    setAnimation(frames);
+                })
+                .catch((e) => {
+                    setError(e.message);
+                });
+        },
+        [setAnimation]
+    );
+    return (
+        <form onSubmit={onSubmit}>
+            <FormError text={error} />
+            <select name="url">
+                <option />
+                {options.map((option) => (
+                    <option key={option[1]} value={option[1]}>
+                        {option[0]}
+                    </option>
+                ))}
+            </select>
+            <input type="submit" />
+        </form>
+    );
+};
 
 const getFramesFromFileForm = async (formData: FormData): Promise<IAnimation> => {
     const file = formData.get("file");
@@ -123,7 +171,7 @@ const parseTextToFrames = (text: string): number[][] => {
 };
 
 const PlayControls: React.FC = () => {
-    const { animation, currentFrame, currentFrameRef, setCurrentFrame } = useExamplesContext();
+    const { animation, setAnimation, currentFrame, currentFrameRef, setCurrentFrame } = useExamplesContext();
     const { frames } = animation;
     const [playing, setPlaying] = React.useState<boolean>(false);
     const now = React.useRef<number>(new Date().valueOf());
@@ -154,7 +202,7 @@ const PlayControls: React.FC = () => {
             }
             animationFrame = requestAnimationFrame(animate);
         };
-        animate();
+        animationFrame = requestAnimationFrame(animate);
         return () => cancelAnimationFrame(animationFrame);
     }, [frames, setCurrentFrame, currentFrameRef, playing]);
     const togglePlaying = React.useCallback(() => {
@@ -165,6 +213,15 @@ const PlayControls: React.FC = () => {
         currentFrameRef.current = 0;
         setCurrentFrame(0);
     }, [setCurrentFrame, currentFrameRef]);
+    const onCloseClick = React.useCallback(() => {
+        setAnimation(null);
+        setCurrentFrame(0);
+        currentFrameRef.current = 0;
+    }, [setAnimation, setCurrentFrame, currentFrameRef]);
+    React.useEffect(() => {
+        setPlaying(true);
+    }, []);
+
     return (
         <div>
             <h4>{animation.name}</h4>
@@ -183,7 +240,20 @@ const PlayControls: React.FC = () => {
                     <button onClick={togglePlaying}>{playing ? "\u23f8" : "\u23f5"}</button>
                     {playing && <button onClick={stopPlaying}>{"\u23f9"}</button>}
                 </div>
+                <div>
+                    <button onClick={onCloseClick}>Close</button>
+                </div>
             </div>
         </div>
     );
+};
+
+const getKnownAnimations = async (): Promise<[string, string][]> => {
+    const resp = await fetch("known-frames.json");
+    const data: string[] = await resp.json();
+    return data.map((url) => {
+        const parts = url.split("/");
+        const name = parts[parts.length - 1];
+        return [name, url];
+    });
 };
