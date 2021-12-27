@@ -29,3 +29,5 @@ You're welcome to contribute! There are a few different places that your PR coul
 ## Further Work
 
 Links to larger projects based on this one
+
+- [Christmas Tree Simulator App](https://github.com/sebimoe/christmas-tree-simulator-app): Renderer of GIFT and CSV animation files. Allows tweaking display settings. Available online [here](https://christmas-tree-viewer.sebi.moe/).
