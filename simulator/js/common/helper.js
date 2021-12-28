@@ -3,6 +3,12 @@ const setLayer = (object, layer) => {
     object.traverse((o) => { o.layers.set(layer); });
 };
 
+const onLayer = (object, layer) => {
+    const testLayer = new THREE.Layers();
+    testLayer.set(layer);
+    return object.isMesh ? testLayer.test(object.layers) : null;
+};
+
 const createFloatAttribute = (array, itemSize) => {
     const typedArray = new Float32Array(flattenArray(array));
     return new THREE.BufferAttribute(typedArray, itemSize);

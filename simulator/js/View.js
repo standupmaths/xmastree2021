@@ -3,23 +3,23 @@ class View {
         this.root = root;
         this.config = config;
         this.presets = presets;
-        this.loader = new LoaderUtils();
 
         // init stage
-        this.stage = new Stage(this.root, this.config, this.loader);
-        this.stage.loaded.then(() => {
+        this.stage = new Stage(this);
+        this.stage.loaded.then(async () => {
 
             // init room
             this.room = new Room(this.stage, 0);
-            this.room.loaded.then(() => {
+            this.room.loaded.then(async () => {
 
                 // init controls
-                this.controls(this.root.querySelector('#controls'));
+                await this.controls(this.root.querySelector('#controls'));
 
                 // init events
                 window.addEventListener('hashchange', async (event) => {
-                    this.update(event);
+                    await this.update(event);
                 });
+                await this.update({ type: 'loaded' });
             });
         });
     }
@@ -36,48 +36,70 @@ class View {
             this.gui.load.preset = preset;
             window.location.reload();
         });
-        configFolder.add(this.config, 'coordinates', this.config.coordinates_).onChange(async (v) => {
-            if (!v) {
+        configFolder.add(this.config, 'coordinates', this.config._coordinates).onChange(async (v) => {
+            if (!this.config._coordinates.includes(v)) {
                 return;
             }
 
+            // use url segments for text
+            const segments = v.split('/');
+            this.config.coordinates = segments.length > 1 ? segments.slice(-1) : 'local';
+
+            // stop running animations
+            this.room.lights.forEach((light) => {
+                light.running = false;
+            });
+            await sleep(100);
+
             // load local file
-            if (v === 'local') {
+            if (v === '...') {
                 this.room.input.coords.click();
-                this.config.coordinates = '';
                 return
             }
 
             // load remote file
+            this.stage.status('Loading', 0);
             const positions = await this.room.input.loadCoords(v);
             this.room.lights.forEach((light) => {
                 light.reset().then(() => {
                     light.addLeds(positions);
                 });
             });
+            this.stage.status('Loading', 100);
         }).listen();
-        configFolder.add(this.config, 'animations', this.config.animations_).onChange(async (v) => {
-            if (!v) {
+        configFolder.add(this.config, 'animations', this.config._animations).onChange(async (v) => {
+            if (!this.config._animations.includes(v)) {
                 return;
             }
 
+            // use url segments for text
+            const segments = v.split('/');
+            this.config.animations = segments.length > 1 ? segments.slice(-1) : 'local';
+
+            // stop running animations
+            this.room.lights.forEach((light) => {
+                light.running = false;
+            });
+            await sleep(100);
+
             // load local file
-            if (v === 'local') {
+            if (v === '...') {
                 this.room.input.frames.click();
-                this.config.animation = '';
                 return
             }
 
             // load remote file
+            this.stage.status('Loading', 0);
             const frames = await this.room.input.loadFrames(v);
             this.room.lights.forEach((light) => {
                 light.animateFrames(frames);
             });
+            this.stage.status('Loading', 100);
         }).listen();
         configFolder.add(this.config, 'fps', 1, 120, 1).onChange((v) => {
             this.stage.update();
-        });
-        configFolder.add(this.config, 'loop');
+        }).listen();
+        configFolder.add(this.config, 'loop').listen();
 
         // tree folder
         const treeFolder = this.gui.addFolder('Tree').close();
@@ -85,7 +107,7 @@ class View {
             treeFolder.add(this.config.tree, 'visible'),
             treeFolder.add(this.config.tree, 'scale', 10, 100, 1),
             treeFolder.add(this.config.tree, 'levels', 0, 9, 1),
-            treeFolder.add(this.config.tree, 'twigScale', 0.0, 0.2, 0.05)
+            treeFolder.add(this.config.tree, 'twigScale', 0.0, 0.15, 0.05)
         ];
 
         // tree branching folder
@@ -128,13 +150,10 @@ class View {
 
         // light folder
         const lightFolder = this.gui.addFolder('Light').close();
-        lightFolder.add(this.config.light, 'directional', 0.0, 3.0, 0.05).onChange((v) => {
+        lightFolder.add(this.config.light, 'ambient', 0.1, 30.0, 0.05).onChange((v) => {
             this.stage.update();
         });
-        lightFolder.add(this.config.light, 'ambient', 0.0, 3.0, 0.05).onChange((v) => {
-            this.stage.update();
-        });
-        lightFolder.add(this.config.light, 'led', 0.0, 3.0, 0.05).onChange((v) => {
+        lightFolder.add(this.config.light, 'led', 0.1, 30.0, 0.05).onChange((v) => {
             this.stage.update();
         });
 
@@ -178,8 +197,32 @@ class View {
             return;
         }
 
+        // load controller
+        let coordinates, animations;
+        for (const controller of this.gui.controllersRecursive()) {
+            if (controller.property === 'coordinates') {
+                coordinates = controller;
+            }
+            if (controller.property === 'animations') {
+                animations = controller;
+            }
+        };
+
+        // set default coordinates
+        coordinates.setValue(this.config.coordinates);
+
+        // set default animations
+        let [i, count] = [0, 0];
+        while (count <= 0 && i++ < 50) {
+            await sleep(100);
+            this.room.lights.forEach((light) => {
+                count += light.leds.length;
+            });
+        }
+        animations.setValue(this.config.animations);
+
         // update room
-        this.room.update();
+        await this.room.update();
     }
 
     async export(date) {

@@ -2,15 +2,20 @@
 <html>
 
 <head>
+
     <meta charset="utf-8" />
     <title>GIFT-Simulator</title>
+
     <link rel="stylesheet" type="text/css" href="css/styles.css" />
     <link rel="shortcut icon" type="image/png" href="img/favicon.png" />
+
     <meta name="description" content="Geographic Information For Trees - Simulator">
     <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1.0" />
+
 </head>
 
 <body>
+
     <div id="main">
         <div id="info"></div>
         <div id="stage"></div>
@@ -42,6 +47,16 @@
     <script src="js/utils/LoaderUtils.js"></script>
     <script src="js/utils/InputUtils.js"></script>
 
+    <script src="js/shader/CopyShader.js"></script>
+    <script src="js/shader/LuminosityHighPassShader.js"></script>
+
+    <script src="js/pass/Pass.js"></script>
+    <script src="js/pass/RenderPass.js"></script>
+    <script src="js/pass/ShaderPass.js"></script>
+    <script src="js/pass/UnrealBloomPass.js"></script>
+
+    <script src="js/composer/EffectComposer.js"></script>
+
     <script src="js/objects/Stage.js"></script>
     <script src="js/objects/Room.js"></script>
     <script src="js/objects/Tree.js"></script>
@@ -49,6 +64,7 @@
     <script src="js/objects/Led.js"></script>
 
     <script src="js/View.js"></script>
+
 </body>
 
 </html>

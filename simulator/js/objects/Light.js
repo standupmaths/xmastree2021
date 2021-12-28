@@ -8,6 +8,7 @@ class Light {
         this.index = index;
 
         this.leds = [];
+        this.running = false;
 
         this.loaded = new Promise(async function (resolve) {
             await this.update();
@@ -42,38 +43,18 @@ class Light {
     }
 
     async setFrame(colors) {
-        const indices = [...Array(colors.length).keys()];
-
-        const prevColors = this.leds.map((led) => led.glow.material.color.getHex());
-        const nextColors = colors.map((color) => intColor(color));
-
-        // TODO
-        if (!this.intensities) {
-            this.intensities = [...Array(colors.length)];
-        }
-        let intensities = indices.map((i) => prevColors[i] != nextColors[i] || this.intensities[i] ? 10.0 : 0.0);
-        let count = 0;
-        indices.slice().reverse().forEach((i) => {
-            if (intensities[i] && count < 100) {
-                count++;
-            }
-            else {
-                intensities[i] = 0.0;
-            }
-            intensities[i] = 0.0;
-        });
-
-        // set color and intensity
         for (let i = 0; i < colors.length; i++) {
             const led = this.leds[i];
-            led.setColor(nextColors[i], intensities[i]);
-        }
 
-        this.intensities = intensities;
+            // set led color
+            led.setColor(intColor(colors[i]));
+        }
     }
 
     async animateFrames(frames) {
         log('debug', `animate ${frames.length} frames (${this.config.fps} FPS)`);
+
+        this.running = true;
 
         do {
             for (const frame of frames) {
@@ -83,15 +64,22 @@ class Light {
                     return;
                 }
 
+                // set colors and wait
                 await this.setFrame(colors);
                 await sleep(1000 / this.config.fps);
+
+                // aborted execution
+                if (!this.running) {
+                    break;
+                }
             }
-        } while (this.config.loop);
+        } while (this.running && this.config.loop);
 
         // reset leds
         this.leds.forEach((led) => {
             led.reset();
         });
+        this.running = false;
     }
 
     async update() {
@@ -99,14 +87,14 @@ class Light {
             return;
         }
 
-        // calculate center of all leds
+        // calculate center of cone
         const center = new THREE.Vector3(
             truncatedMean(this.leds.map((led) => led.position.x), 0.05),
             0,
             truncatedMean(this.leds.map((led) => led.position.z), 0.05)
         );
 
-        // re-center each led
+        // move each led towards center
         this.leds.forEach((led) => {
             led.position.sub(center);
             led.update();
@@ -120,7 +108,7 @@ class Light {
     async reset() {
         // remove leds
         this.leds.forEach((led) => {
-            this.scene.remove(led.group);
+            this.scene.remove(led.sphere);
         });
         this.leds = [];
 

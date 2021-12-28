@@ -11,6 +11,8 @@ class Room {
         this.lights = [];
         this.grounds = [];
 
+        this.input = new InputUtils(this.root);
+
         this.groundMaterial = new THREE.MeshLambertMaterial({
             color: this.config.material.ground,
             side: THREE.DoubleSide
@@ -22,6 +24,7 @@ class Room {
             metalness: 0.3
         });
 
+        this.stage.status('Loading', 50);
         this.loaded = new Promise(async function (resolve) {
             this.leafMaterial = new THREE.MeshStandardMaterial({
                 map: await this.loader.load('texture', 'img/leaf.png'),
@@ -30,8 +33,7 @@ class Room {
                 metalness: 0.3,
                 alphaTest: 0.1
             });
-
-            this.input = new InputUtils(this.root);
+            this.stage.status('Loading', 75);
 
             this.input.coords.addEventListener('input', async () => {
                 const positions = await this.input.loadCoords();
@@ -94,10 +96,6 @@ class Room {
     async addLight() {
         const light = await this.getLight(0)
         this.lights.push(light);
-
-        // load default lights
-        const positions = await this.input.loadCoords(this.config.coordinates);
-        return light.addLeds(positions);
     }
 
     async removeLights() {
@@ -152,7 +150,7 @@ class Room {
         treeGroup.position.set(0.0, 0.01, 0.0);
 
         // add tree
-        setLayer(treeGroup, this.stage.layer.tree);
+        setLayer(treeGroup, this.stage.layer.trees);
         this.trees.push(treeGroup);
         this.scene.add(treeGroup);
     }

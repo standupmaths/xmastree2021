@@ -7,22 +7,11 @@ class Led {
         this.stage = stage;
         this.position = position;
 
-        this.ledScale = 0.6;
-        this.glowScale = 1.0;
-        this.lightDistance = 0.2;
+        this.scale = 0.6;
 
-        this.materialLed = new THREE.MeshPhongMaterial({
+        this.material = new THREE.MeshPhongMaterial({
             color: 0x666666,
-            shininess: 0.8
-        });
-
-        this.materialGlow = new THREE.MeshPhongMaterial({
-            color: 0x666666,
-            emissive: 0x666666,
-            depthWrite: false,
-            transparent: true,
-            shininess: 0.8,
-            opacity: 0.0
+            shininess: 0.9
         });
 
         this.loaded = new Promise(async function (resolve) {
@@ -34,74 +23,45 @@ class Led {
     }
 
     async addLed() {
-        this.group = new THREE.Group();
-        this.group.position.copy(this.position);
-
-        // add led
-        const ledGeometry = new THREE.SphereGeometry(this.ledScale / 100, 32, 32);
-        this.led = new THREE.Mesh(ledGeometry, this.materialLed.clone());
-        this.group.add(this.led)
-
-        // add led glow
-        const glowGeometry = new THREE.SphereGeometry(this.glowScale / 100, 32, 32);
-        this.glow = new THREE.Mesh(glowGeometry, this.materialGlow.clone());
-        this.group.add(this.glow)
-
-        // add led light
-        this.light = new THREE.PointLight(0, 0.0, this.lightDistance);
-        this.light.visible = false;
-        this.group.add(this.light)
+        const sphereGeometry = new THREE.SphereGeometry(this.scale / 100, 32, 32);
+        this.sphere = new THREE.Mesh(sphereGeometry, this.material.clone());
 
         // add to scene
-        this.scene.add(this.group);
-        setLayer(this.group, this.stage.layer.light);
+        this.scene.add(this.sphere);
+        setLayer(this.sphere, this.stage.layer.lightsOff);
     }
 
-    async setColor(color, intensity) {
+    async setColor(color) {
         if (!color) {
             this.turnOff();
             return;
         }
-        this.turnOn(color, intensity);
+        this.turnOn(color);
     }
 
-    async turnOn(color, intensity) {
-        // led color
-        this.led.material.color.setHex(color);
+    async turnOn(color) {
+        this.sphere.material.color.setHex(color);
+        this.sphere.material.emissive.setHex(color);
 
-        // glow visibility and color
-        this.glow.material.opacity = 0.4;
-        this.glow.material.color.setHex(color);
-        this.glow.material.emissive.setHex(color);
-
-        // light intensity and color
-        this.light.visible = !!intensity;
-        this.light.intensity = intensity;
-        this.light.color.setHex(color);
+        // move to boom layer
+        setLayer(this.sphere, this.stage.layer.lightsOn);
     }
 
     async turnOff() {
-        // led color
-        this.led.material.color.setHex(this.materialLed.color.getHex());
+        this.sphere.material.color.setHex(this.material.color.getHex());
+        this.sphere.material.emissive.setHex(this.material.emissive.getHex());
 
-        // glow visibility and color
-        this.glow.material.opacity = 0.0;
-        this.glow.material.color.setHex(this.materialGlow.color.getHex());
-        this.glow.material.emissive.setHex(this.materialGlow.emissive.getHex());
-
-        // light intensity and color
-        this.light.visible = false;
-        this.light.intensity = 0.0;
-        this.light.color.setHex(this.materialGlow.color.getHex());
+        // move to shader layer
+        setLayer(this.sphere, this.stage.layer.lightsOff);
     }
 
     async update() {
-        if (!this.group) {
+        if (!this.sphere) {
             return;
         }
 
         // update position
-        this.group.position.copy(this.position);
+        this.sphere.position.copy(this.position);
     }
 
     async export(zip) {
