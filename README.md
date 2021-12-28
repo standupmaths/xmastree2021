@@ -29,3 +29,5 @@ You're welcome to contribute! There are a few different places that your PR coul
 ## Further Work
 
 Links to larger projects based on this one
+
+- [Xmas Tree Lights Live Coding App](https://github.com/sirxemic/xmastree-app): Code the xmas lights directly in the browser and see immediate results. Available online [here](https://sirxemic.github.io/xmastree-app/).
