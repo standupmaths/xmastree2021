@@ -9,7 +9,7 @@ A simple http server is sufficient to run the simulation, no other backend is ne
 ## Online [![browser](https://img.shields.io/badge/browser-gray?logo=googlechrome&logoColor=white)](#Online) [![status](https://img.shields.io/badge/status-up-brightgreen)](#Online)
 
 An online version of the simulation can be found [here](https://leukipp.github.io/xmastree2021/simulator).
-[![app](/img/app.gif)](https://leukipp.github.io/xmastree2021/simulator)
+[![app](/simulator/img/app.gif)](https://leukipp.github.io/xmastree2021/simulator)
 
 ### Usage
 Settings can be defined by hash parameters. Here some examples:
@@ -17,12 +17,11 @@ Settings can be defined by hash parameters. Here some examples:
 **Load coordinates from url**:  
 [https://leukipp.github.io/xmastree2021/simulator/#coordinates=https://raw.githubusercontent.com/standupmaths/xmastree2021/main/coords_2021.csv](https://leukipp.github.io/xmastree2021/simulator/#coordinates=https://raw.githubusercontent.com/standupmaths/xmastree2021/main/coords_2021.csv)
 
-**Load animations from url**:
+**Load animations from url**:  
 [https://leukipp.github.io/xmastree2021/simulator/#animations=https://raw.githubusercontent.com/GSD6338/XmasTree/main/02_sequencing/moving-rotating-rainbow.csv](https://leukipp.github.io/xmastree2021/simulator/#animations=https://raw.githubusercontent.com/GSD6338/XmasTree/main/02_sequencing/moving-rotating-rainbow.csv)
 
 **Adjust frames per second**:  
 [https://leukipp.github.io/xmastree2021/simulator/#fps=30](https://leukipp.github.io/xmastree2021/simulator/#fps=30)
-
 
 **Replay frames after finish**:  
 [https://leukipp.github.io/xmastree2021/simulator/#loop=true](https://leukipp.github.io/xmastree2021/simulator/#loop=true)
