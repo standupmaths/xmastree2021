@@ -47,7 +47,7 @@ class View {
 
             // stop running animations
             this.room.lights.forEach((light) => {
-                light.running = false;
+                light.stopped = true;
             });
             await sleep(100);
 
@@ -78,7 +78,7 @@ class View {
 
             // stop running animations
             this.room.lights.forEach((light) => {
-                light.running = false;
+                light.stopped = true;
             });
             await sleep(100);
 
@@ -152,10 +152,24 @@ class View {
         const lightFolder = this.gui.addFolder('Light').close();
         lightFolder.add(this.config.light, 'ambient', 0.1, 30.0, 0.05).onChange((v) => {
             this.stage.update();
-        });
+        }).listen();
         lightFolder.add(this.config.light, 'led', 0.1, 30.0, 0.05).onChange((v) => {
             this.stage.update();
-        });
+        }).listen();
+        lightFolder.add(this.config.light, 'glow').onChange((v) => {
+            this.room.lights.forEach((light) => {
+                light.paused = true;
+                light.leds.forEach((led) => {
+                    led.turnOff();
+                });
+            });
+            sleep(100).then(() => {
+                this.room.lights.forEach((light) => {
+                    light.paused = false;
+                });
+                this.stage.update();
+            });
+        }).listen();
 
         // material folder
         const materialFolder = this.gui.addFolder('Material').close();

@@ -11,7 +11,8 @@
         "https://raw.githubusercontent.com/GSD6338/XmasTree/main/02_sequencing/flush.csv",
         "https://raw.githubusercontent.com/GSD6338/XmasTree/main/02_sequencing/random-blinking-color.csv",
         "https://raw.githubusercontent.com/BoostCookie/xmastree2021/main/examples/bouncy-ball.csv",
-        "https://raw.githubusercontent.com/quantumjim/xmastree2021/main/examples/quantum-rainbow.csv"
+        "https://raw.githubusercontent.com/quantumjim/xmastree2021/main/examples/quantum-rainbow.csv",
+        "https://raw.githubusercontent.com/Knarf7474/SantaHatChristmasTreeEffect/main/santa_hat_effect_frank.csv"
     ],
     "fps": 60,
     "loop": false,
@@ -44,7 +45,8 @@
     },
     "light": {
         "ambient": 10.0,
-        "led": 12.0
+        "led": 12.0,
+        "glow": true
     },
     "material": {
         "tree": "0x613615",

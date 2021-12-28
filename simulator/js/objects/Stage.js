@@ -15,6 +15,7 @@ class Stage {
         this.loader = new LoaderUtils();
 
         this.fov = 60;
+        this.glow = this.config.light.glow;
         this.fps = [Math.max(30, this.config.fps)];
 
         this.clock = new THREE.Clock();
@@ -187,7 +188,9 @@ class Stage {
         this.renderer.setClearColor(0x000000);
 
         // render bloom
-        this.bloomComposer.render();
+        if (this.glow) {
+            this.bloomComposer.render();
+        }
 
         // restore original materials
         this.scene.traverse((o) => {
@@ -208,6 +211,7 @@ class Stage {
     async update() {
 
         // update light intensities
+        this.glow = this.config.light.glow;
         this.bloomPass.strength = this.config.light.led;
         this.ambientLight.intensity = this.config.light.ambient / 10;
 

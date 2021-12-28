@@ -8,7 +8,8 @@ class Light {
         this.index = index;
 
         this.leds = [];
-        this.running = false;
+        this.paused = false;
+        this.stopped = false;
 
         this.loaded = new Promise(async function (resolve) {
             await this.update();
@@ -54,7 +55,8 @@ class Light {
     async animateFrames(frames) {
         log('debug', `animate ${frames.length} frames (${this.config.fps} FPS)`);
 
-        this.running = true;
+        this.paused = false;
+        this.stopped = false;
 
         do {
             for (const frame of frames) {
@@ -64,22 +66,30 @@ class Light {
                     return;
                 }
 
-                // set colors and wait
+                // set colors
                 await this.setFrame(colors);
+
+                // aim framerate
                 await sleep(1000 / this.config.fps);
 
-                // aborted execution
-                if (!this.running) {
+                // pause execution
+                while (!this.stopped && this.paused) {
+                    await sleep(100);
+                }
+
+                // abort execution
+                if (this.stopped) {
                     break;
                 }
             }
-        } while (this.running && this.config.loop);
+        } while (!this.stopped && this.config.loop);
 
         // reset leds
         this.leds.forEach((led) => {
             led.reset();
         });
-        this.running = false;
+        this.paused = false;
+        this.stopped = false;
     }
 
     async update() {
