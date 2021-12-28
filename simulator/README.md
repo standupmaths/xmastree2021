@@ -6,6 +6,28 @@ Light coordinates and animations can be loaded and visualized using remote urls 
 A simple http server is sufficient to run the simulation, no other backend is needed.  
 
 
+## Online [![browser](https://img.shields.io/badge/browser-gray?logo=googlechrome&logoColor=white)](#Online) [![status](https://img.shields.io/badge/status-up-brightgreen)](#Online)
+
+An online version of the simulation can be found [here](https://leukipp.github.io/xmastree2021/simulator).
+[![app](/img/app.gif)](https://leukipp.github.io/xmastree2021/simulator)
+
+### Usage
+Settings can be defined by hash parameters. Here some examples:
+
+**Load coordinates from url**:  
+[https://leukipp.github.io/xmastree2021/simulator/#coordinates=https://raw.githubusercontent.com/standupmaths/xmastree2021/main/coords_2021.csv](https://leukipp.github.io/xmastree2021/simulator/#coordinates=https://raw.githubusercontent.com/standupmaths/xmastree2021/main/coords_2021.csv)
+
+**Load animations from url**:
+[https://leukipp.github.io/xmastree2021/simulator/#animations=https://raw.githubusercontent.com/GSD6338/XmasTree/main/02_sequencing/moving-rotating-rainbow.csv](https://leukipp.github.io/xmastree2021/simulator/#animations=https://raw.githubusercontent.com/GSD6338/XmasTree/main/02_sequencing/moving-rotating-rainbow.csv)
+
+**Adjust frames per second**:  
+[https://leukipp.github.io/xmastree2021/simulator/#fps=30](https://leukipp.github.io/xmastree2021/simulator/#fps=30)
+
+
+**Replay frames after finish**:  
+[https://leukipp.github.io/xmastree2021/simulator/#loop=true](https://leukipp.github.io/xmastree2021/simulator/#loop=true)
+
+
 ## Setup [![github](https://img.shields.io/badge/github-gray?logo=github&logoColor=white)](#Setup) [![html](https://img.shields.io/badge/html-gray?logo=html5&logoColor=white)](#Setup)
 Browse into the repository simulation folder and start a webserver: (e.g. builtin python webserver)
 
@@ -13,12 +35,9 @@ Browse into the repository simulation folder and start a webserver: (e.g. builti
 python3 -m http.server 8080
 ```
 
-The simulation is now available via http://127.0.0.1:8080.
+### Usage
 
-
-## Online [![browser](https://img.shields.io/badge/browser-gray?logo=googlechrome&logoColor=white)](#Online) [![status](https://img.shields.io/badge/status-up-brightgreen)](#Online)
-
-An online version of the simulation can also be found [here](https://leukipp.github.io/xmastree2021/simulator).
+The simulation is now locally available via http://127.0.0.1:8080.
 
 
 ## Legal [![download](https://img.shields.io/badge/download-free-lightgrey)](#Legal)
