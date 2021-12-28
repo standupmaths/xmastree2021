@@ -37,7 +37,7 @@ class View {
             window.location.reload();
         });
         configFolder.add(this.config, 'coordinates', this.config._coordinates).onChange(async (v) => {
-            if (!this.config._coordinates.includes(v)) {
+            if (!validUrl(v) && !this.config._coordinates.includes(v)) {
                 return;
             }
 
@@ -68,7 +68,7 @@ class View {
             this.stage.status('Loading', 100);
         }).listen();
         configFolder.add(this.config, 'animations', this.config._animations).onChange(async (v) => {
-            if (!this.config._animations.includes(v)) {
+            if (!validUrl(v) && !this.config._animations.includes(v)) {
                 return;
             }
 
