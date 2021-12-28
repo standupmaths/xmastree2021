@@ -28,4 +28,4 @@ You're welcome to contribute! There are a few different places that your PR coul
 
 ## Further Work
 
-Links to larger projects based on this one
+[Aonodensetsu's visualizer](https://github.com/Aonodensetsu/xmas-tree-visualizer)
