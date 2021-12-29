@@ -29,3 +29,4 @@ You're welcome to contribute! There are a few different places that your PR coul
 ## Further Work
 
 Links to larger projects based on this one
+[Avenzi's GIF to GIFT tool](https://github.com/avenzi/Xmas-Tree-GIF-Tool)
