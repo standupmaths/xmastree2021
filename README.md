@@ -30,4 +30,6 @@ You're welcome to contribute! There are a few different places that your PR coul
 
 Links to larger projects based on this one
 
-- [Christmas Tree Simulator App](https://github.com/sebimoe/christmas-tree-simulator-app): Renderer of GIFT and CSV animation files. Allows tweaking display settings. Available online [here](https://christmas-tree-viewer.sebi.moe/).
+- ["MPTree - Matt Parker's Tree Emulator"](https://santiagodg.github.io/mptree/): Load your local GIFT files and CSV light sequences directly on your browser! Useful for quick testing.
+- [Xmas Tree Lights Live Coding App](https://github.com/sirxemic/xmastree-app): Code the xmas lights directly in the browser and see immediate results. Available online [here](https://sirxemic.github.io/xmastree-app/).
+- [Christmas Tree Simulator App](https://github.com/sebimoe/christmas-tree-simulator-app): Online renderer of GIFT and CSV animation files. Allows tweaking display settings. Available online [here](https://christmas-tree-viewer.sebi.moe/).
