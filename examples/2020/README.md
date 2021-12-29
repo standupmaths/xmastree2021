@@ -14,7 +14,7 @@ Animation: Original Author
 * 3dplasma: @Godzil
 * colour-waves: @Tirine
 * fire: @Diggsey
-* lightning: @Diggsey
+* lightning: @Tirine
 * rainbow_rings: @tealnoise
 * rehoboam: @LoganPress
 * rgb-spheres: @NeunEinser
