@@ -30,4 +30,5 @@ You're welcome to contribute! There are a few different places that your PR coul
 
 Links to larger projects based on this one
 
-[Avenzi's GIF to GIFT tool](https://github.com/avenzi/Xmas-Tree-GIF-Tool)
+- ["MPTree - Matt Parker's Tree Emulator"](https://santiagodg.github.io/mptree/): Load your local GIFT files and CSV light sequences directly on your browser! Useful for quick testing.
+- [Avenzi's GIF to GIFT tool](https://github.com/avenzi/Xmas-Tree-GIF-Tool)
