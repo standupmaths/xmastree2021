@@ -8,11 +8,7 @@
     "animations": "https://raw.githubusercontent.com/GSD6338/XmasTree/main/02_sequencing/flush.csv",
     "_animations": [
         "...",
-        "https://raw.githubusercontent.com/GSD6338/XmasTree/main/02_sequencing/flush.csv",
-        "https://raw.githubusercontent.com/GSD6338/XmasTree/main/02_sequencing/random-blinking-color.csv",
-        "https://raw.githubusercontent.com/BoostCookie/xmastree2021/main/examples/bouncy-ball.csv",
-        "https://raw.githubusercontent.com/quantumjim/xmastree2021/main/examples/quantum-rainbow.csv",
-        "https://raw.githubusercontent.com/Knarf7474/SantaHatChristmasTreeEffect/main/santa_hat_effect_frank.csv"
+        "https://raw.githubusercontent.com/GSD6338/XmasTree/main/02_sequencing/flush.csv"
     ],
     "fps": 60,
     "loop": false,
@@ -52,7 +48,7 @@
         "tree": "0x613615",
         "leaf": "0x557755",
         "ground": "0xffffff",
-        "background": "0x1e1820"
+        "background": "0x2f2a46"
     },
     "rotation": 1.0
 }

@@ -4,6 +4,9 @@ class View {
         this.config = config;
         this.presets = presets;
 
+        // init filesystem
+        this.fs = new FileSystemUtils('/home/web_user/data');
+
         // init stage
         this.stage = new Stage(this);
         this.stage.loaded.then(async () => {
@@ -35,7 +38,7 @@ class View {
         configFolder.add(this.config, 'preset', this.presets).onChange((preset) => {
             this.gui.load.preset = preset;
             window.location.reload();
-        });
+        }).listen();
         configFolder.add(this.config, 'coordinates', this.config._coordinates).onChange(async (v) => {
             if (!validUrl(v) && !this.config._coordinates.includes(v)) {
                 return;
@@ -51,10 +54,15 @@ class View {
             });
             await sleep(100);
 
-            // load local file
+            // load desktop file
             if (v === '...') {
                 this.room.input.coords.click();
                 return
+            }
+
+            // load browser file
+            if (v.startsWith('fs://')) {
+                v = await this.fs.read(v.slice(4));
             }
 
             // load remote file
@@ -82,10 +90,15 @@ class View {
             });
             await sleep(100);
 
-            // load local file
+            // load desktop file
             if (v === '...') {
                 this.room.input.frames.click();
                 return
+            }
+
+            // load browser file
+            if (v.startsWith('fs://')) {
+                v = await this.fs.read(v.slice(4));
             }
 
             // load remote file
@@ -104,7 +117,7 @@ class View {
         // tree folder
         const treeFolder = this.gui.addFolder('Tree').close();
         const treesFolders = [
-            treeFolder.add(this.config.tree, 'visible'),
+            treeFolder.add(this.config.tree, 'visible').listen(),
             treeFolder.add(this.config.tree, 'scale', 10, 100, 1),
             treeFolder.add(this.config.tree, 'levels', 0, 9, 1),
             treeFolder.add(this.config.tree, 'twigScale', 0.0, 0.15, 0.05)
@@ -175,22 +188,22 @@ class View {
         const materialFolder = this.gui.addFolder('Material').close();
         materialFolder.addColor(this.config.material, 'tree').onChange((v) => {
             this.room.treeMaterial.color.setHex(v);
-        });
+        }).listen();
         materialFolder.addColor(this.config.material, 'leaf').onChange((v) => {
             this.room.leafMaterial.color.setHex(v);
-        });
+        }).listen();
         materialFolder.addColor(this.config.material, 'ground').onChange((v) => {
             this.room.groundMaterial.color.setHex(v);
-        });
+        }).listen();
         materialFolder.addColor(this.config.material, 'background').onChange((v) => {
             this.stage.renderer.setClearColor(v);
             document.body.style.backgroundColor = hexColor(v);
-        });
+        }).listen();
 
         // stage actions
         this.gui.add(this.config, 'rotation', 0.0, 20.0, 0.05).onChange((v) => {
             this.stage.update();
-        });
+        }).listen();
         this.gui.add(this, 'export');
         this.gui.add(this, 'reset');
     }
@@ -212,20 +225,21 @@ class View {
         }
 
         // load controller
-        let coordinates, animations;
+        let coordinatesCtrl, animationsCtrl;
         for (const controller of this.gui.controllersRecursive()) {
             if (controller.property === 'coordinates') {
-                coordinates = controller;
+                coordinatesCtrl = controller;
             }
             if (controller.property === 'animations') {
-                animations = controller;
+                animationsCtrl = controller;
             }
         };
 
         // set default coordinates
-        coordinates.setValue(this.config.coordinates);
+        coordinatesCtrl.setValue(this.config.coordinates);
+        coordinatesCtrl.updateDisplay();
 
-        // set default animations
+        // await initialization of lights
         let [i, count] = [0, 0];
         while (count <= 0 && i++ < 50) {
             await sleep(100);
@@ -233,7 +247,31 @@ class View {
                 count += light.leds.length;
             });
         }
-        animations.setValue(this.config.animations);
+
+        // copy animations from config
+        const animations = this.config._animations.slice();
+
+        // prepend animations from github
+        const examples = await fetch('https://api.github.com/repos/standupmaths/xmastree2021/contents/examples');
+        animations.splice(1, 0, ...(await examples.json()).map((file) => file.download_url));
+
+        // prepend animations from filesystem
+        const filesystem = (await this.fs.list()).map((file) => `fs:/${file}`);
+        animations.splice(1, 0, ...filesystem);
+
+        // update animations controller
+        animationsCtrl.$select.innerHTML = '';
+        animations.forEach((animation) => {
+            const option = document.createElement('option');
+            option.innerHTML = animation;
+            animationsCtrl.$select.appendChild(option);
+        });
+        animationsCtrl._values = animations;
+        animationsCtrl._names = animations;
+
+        // set default animations
+        animationsCtrl.setValue(this.config.animations);
+        animationsCtrl.updateDisplay();
 
         // update room
         await this.room.update();
