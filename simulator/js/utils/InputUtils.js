@@ -12,7 +12,7 @@ class InputUtils {
         return new Promise(function (resolve) {
             Papa.parse(target, {
                 header: false,
-                download: !!url,
+                download: validUrl(url),
                 dynamicTyping: true,
                 skipEmptyLines: true,
                 complete: (results) => {
@@ -35,7 +35,7 @@ class InputUtils {
         return new Promise(function (resolve) {
             Papa.parse(target, {
                 header: false,
-                download: !!url,
+                download: validUrl(url),
                 dynamicTyping: true,
                 skipEmptyLines: true,
                 complete: (results) => {

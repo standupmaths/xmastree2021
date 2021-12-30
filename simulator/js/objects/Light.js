@@ -56,7 +56,7 @@ class Light {
         log('debug', `animate ${frames.length} frames (${this.config.fps} FPS)`);
 
         this.paused = false;
-        this.stopped = false;
+        this.stopped = frames.length == 0;
 
         do {
             for (const frame of frames) {
