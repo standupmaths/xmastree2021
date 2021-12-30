@@ -11,6 +11,10 @@ This repository contains the code and coordinates used for Matt's 2021 Christmas
 
 Code in the `examples` folder has been provided by other contributors!
 
+The format of the CSV animation files can be found in [AnimationCSVFormat.md](AnimationCSVFormat.md)
+
+The code to run the animation CSV files can be found in [execution](execution)
+
 Most of what you need is probably over on the Harvard Graduate School of Design repository: ["GSD-6338: Introduction to Computational Design"](https://github.com/GSD6338)
 
 ## Usage
