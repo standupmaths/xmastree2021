@@ -18,6 +18,5 @@ Animation: Original Author
 * rainbow_rings: @tealnoise
 * rehoboam: @LoganPress
 * rgb-spheres: @NeunEinser
-* salesman: @SimonRovder
 * xmaslights-contagion: @christopherpaul
 * xmaslights-tetrahedron: @cnkeats
