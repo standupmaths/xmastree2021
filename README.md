@@ -35,3 +35,5 @@ Links to larger projects based on this one
 - [GIFT-Simulator](https://leukipp.github.io/xmastree/files/simulator/): 
 Check online how your CSV animations may look like on a "real" tree. 
 Files published here in the `examples` folder are automatically retrieved and immediately available.
+- [GIFT-Development](https://leukipp.github.io/xmastree/lab/): 
+Start coding right away with Jupyter Lab notebooks in `python`, `javascript` and `p5.js`.
