@@ -10,4 +10,4 @@ Requires matts_tree_helpers.py from https://github.com/gentlegiantJGC/xmastree20
 
 The baked version of the python program for Matt's tree.
 
-Runs at 7fps. This is baked into the FRAME_TIME column as read by https://github.com/standupmaths/xmastree2021/pull/30
+Runs at 30fps. This is baked into the FRAME_TIME column as read by https://github.com/standupmaths/xmastree2021/pull/30

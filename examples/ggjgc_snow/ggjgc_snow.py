@@ -31,10 +31,11 @@ def snow():
 
     colour = (255, 255, 255)
 
-    frame_time = 1 / 7
+    frame_time = 1 / 30
+    sub_frames = 5
 
     # The max distance that should be considered a neighbour LED
-    max_dist = 0.2 * tree_height
+    max_dist = 0.3 * tree_height
 
     # the number of brightness steps and the number of frames it takes the LED to turn off
     steps = 5
@@ -53,16 +54,16 @@ def snow():
                 if dist < max_dist:
                     # if within the max distance
                     led_data.append((dist, led2))
-        led_data = sorted(led_data, key=lambda x: x[0])[:5]
+        led_data = sorted(led_data, key=lambda x: x[0])[:15]
         if led_data:
             _, leds = zip(*led_data)
         else:
             leds = []
         next_leds[led1] = leds
 
-    # find the LEDs that are in the top third of the tree
+    # find the LEDs that are in the top half of the tree
     start_leds = [
-        led for led, coord in enumerate(coords) if coord[2] > max_y - tree_height / 3
+        led for led, coord in enumerate(coords) if coord[2] > max_y - tree_height / 2
     ]
 
     while True:
@@ -78,13 +79,14 @@ def snow():
             # calculate the colour for each pixel
             for i, v in pixel_colours.items():
                 pixels[i] = tuple(c * v / steps for c in colour)
-
-            # use the show() option as rarely as possible as it takes ages
-            # do not use show() each time you change a LED but rather wait until you have changed them all
+            pixel_colours[random.choice(start_leds)] = steps
             pixels.show()
 
-            # if not any(pixel_colours.values()):
-            pixel_colours[random.choice(start_leds)] = steps
+        for _ in range(sub_frames-1):
+            with FrameManager(frame_time):
+                # use the show() option as rarely as possible as it takes ages
+                # do not use show() each time you change a LED but rather wait until you have changed them all
+                pixels.show()
 
 
 if __name__ == "__main__":
