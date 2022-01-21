@@ -32,3 +32,4 @@ Links to larger projects based on this one
 
 - ["MPTree - Matt Parker's Tree Emulator"](https://santiagodg.github.io/mptree/): Load your local GIFT files and CSV light sequences directly on your browser! Useful for quick testing.
 - [Xmas Tree Lights Live Coding App](https://github.com/sirxemic/xmastree-app): Code the xmas lights directly in the browser and see immediate results. Available online [here](https://sirxemic.github.io/xmastree-app/).
+- ["Running Christmas Lights Using Oblivion"](https://github.com/katawful/oblivion-christmas-lights): A library for TES 4: Oblivion to generate CSV sequences using the GIFT format
