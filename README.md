@@ -32,3 +32,8 @@ Links to larger projects based on this one
 
 - ["MPTree - Matt Parker's Tree Emulator"](https://santiagodg.github.io/mptree/): Load your local GIFT files and CSV light sequences directly on your browser! Useful for quick testing.
 - [Xmas Tree Lights Live Coding App](https://github.com/sirxemic/xmastree-app): Code the xmas lights directly in the browser and see immediate results. Available online [here](https://sirxemic.github.io/xmastree-app/).
+- [GIFT-Simulator](https://leukipp.github.io/xmastree/files/simulator/): 
+Check online how your CSV animations may look like on a "real" tree. 
+Files published here in the `examples` folder are automatically retrieved and immediately available.
+- [GIFT-Development](https://leukipp.github.io/xmastree/lab/): 
+Start coding right away with Jupyter Lab notebooks in `python`, `javascript` and `p5.js`.
