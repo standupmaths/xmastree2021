@@ -14,7 +14,13 @@ Code in the `examples` folder has been provided by other contributors!
 Most of what you need is probably over on the Harvard Graduate School of Design repository: ["GSD-6338: Introduction to Computational Design"](https://github.com/GSD6338)
 
 ## Usage
+### Matplotlib Visualization
+There is a visualization script that shows an animation with numpy and matplotlib.
 
+Usage example:
+```bash
+./visualization/visualize.py coords_2021.csv examples/test.csv
+```
 
 ## Contributing
 
